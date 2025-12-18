@@ -25,10 +25,10 @@ const router = createBrowserRouter([
       (
           <ProtectedRoute>
             {/* layout dùng chung */}
-              <AppLayout />  
+              <AppLayout />
         </ProtectedRoute>
       ),
-       
+
         children: [
             {
                 path: "/",
@@ -37,7 +37,7 @@ const router = createBrowserRouter([
                     title: "Trang chủ",
                 },
             },
-           
+
         ],
     },
     {
