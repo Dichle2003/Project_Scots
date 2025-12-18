@@ -21,7 +21,7 @@ export default function Login() {
             console.error(err);
             setError('Đăng nhập thất bại')
         }
-        
+
     }
     const GoogleIcon = ({ className = "w-5 h-5" }) => (
   <svg
@@ -181,7 +181,7 @@ const XIcon = ({ className = "w-5 h-5" }) => (
                 <div className="text-5xl font-bold text-white">
                     <div>SCOTS</div>
                     <div>ENGLISH</div>
-                     </div>     
+                     </div>
             </div>
           </div>
 
