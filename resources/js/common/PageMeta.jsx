@@ -1,16 +1,32 @@
-import { HelmetProvider, Helmet } from "react-helmet-async";
+import { Helmet } from "react-helmet-async";
+import { Outlet, useMatches } from "react-router-dom";
 
-const PageMeta = ({ title, description }) => (
-    <Helmet>
-        <title>{title}</title>
-        <meta name="description" content={description} />
-    </Helmet>
-);
+const DEFAULT_TITLE = "Laravel React Admin";
 
-export const AppWrapper = ({ children }) => (
-    <HelmetProvider>
-        {children}
-    </HelmetProvider>
-);
+export function AppWrapper() {
+    const matches = useMatches();
 
-export default PageMeta;
+    // Route hiện tại (route cuối)
+    const currentRoute = matches[matches.length - 1];
+
+    const title = currentRoute?.handle?.title;
+    const description = currentRoute?.handle?.description;
+
+    return (
+        <>
+            <Helmet>
+                <title>
+                    {title ? `${title} | Admin` : DEFAULT_TITLE}
+                </title>
+
+                {description && (
+                    <meta name="description" content={description} />
+                )}
+            </Helmet>
+
+            <Outlet />
+        </>
+    );
+}
+
+export default AppWrapper;

@@ -10,10 +10,16 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <Home />,
+                handle: {
+                    title: "Trang chủ",
+                },
             },
             {
                 path: "/login",
                 element: <Login />,
+                handle: {
+                    title: "Đăng nhập",
+                },
             },
         ],
     },

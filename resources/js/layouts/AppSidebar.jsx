@@ -171,15 +171,15 @@ const AppSidebar = () => {
                                     : "lg:justify-start"
                             }`}
                         >
-            <span
-                className={`menu-item-icon-size ${
-                    openSubmenu?.type === menuType && openSubmenu?.index === index
-                        ? "menu-item-icon-active"
-                        : "menu-item-icon-inactive"
-                }`}
-            >
-              {nav.icon}
-            </span>
+                            <span
+                                className={`menu-item-icon-size ${
+                                    openSubmenu?.type === menuType && openSubmenu?.index === index
+                                        ? "menu-item-icon-active"
+                                        : "menu-item-icon-inactive"
+                                }`}
+                            >
+                              {nav.icon}
+                            </span>
 
                             {(isExpanded || isHovered || isMobileOpen) && (
                                 <span className="menu-item-text">{nav.name}</span>
@@ -206,15 +206,15 @@ const AppSidebar = () => {
                                         : "menu-item-inactive"
                                 }`}
                             >
-              <span
-                  className={`menu-item-icon-size ${
-                      isActive(nav.path)
-                          ? "menu-item-icon-active"
-                          : "menu-item-icon-inactive"
-                  }`}
-              >
-                {nav.icon}
-              </span>
+                                  <span
+                                      className={`menu-item-icon-size ${
+                                          isActive(nav.path)
+                                              ? "menu-item-icon-active"
+                                              : "menu-item-icon-inactive"
+                                      }`}
+                                  >
+                                    {nav.icon}
+                                  </span>
 
                                 {(isExpanded || isHovered || isMobileOpen) && (
                                     <span className="menu-item-text">{nav.name}</span>
@@ -251,30 +251,19 @@ const AppSidebar = () => {
                                             {subItem.name}
 
                                             <span className="flex items-center gap-1 ml-auto">
-                      {subItem.new && (
-                          <span
-                              className={`menu-dropdown-badge ${
-                                  isActive(subItem.path)
-                                      ? "menu-dropdown-badge-active"
-                                      : "menu-dropdown-badge-inactive"
-                              }`}
-                          >
-                          new
-                        </span>
-                      )}
+                                                  {subItem.new && (
+                                                      <span
+                                                          className={`menu-dropdown-badge ${
+                                                              isActive(subItem.path)
+                                                                  ? "menu-dropdown-badge-active"
+                                                                  : "menu-dropdown-badge-inactive"
+                                                          }`}
+                                                      >
+                                                      new
+                                                    </span>
+                                                  )}
 
-                                                {subItem.pro && (
-                                                    <span
-                                                        className={`menu-dropdown-badge ${
-                                                            isActive(subItem.path)
-                                                                ? "menu-dropdown-badge-active"
-                                                                : "menu-dropdown-badge-inactive"
-                                                        }`}
-                                                    >
-                          pro
-                        </span>
-                                                )}
-                    </span>
+                                        </span>
                                         </Link>
                                     </li>
                                 ))}
@@ -303,7 +292,7 @@ const AppSidebar = () => {
             onMouseLeave={() => setIsHovered(false)}
         >
             <div
-                className={`py-8 flex ${
+                className={`py-3 flex ${
                     !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
                 }`}
             >
@@ -312,14 +301,14 @@ const AppSidebar = () => {
                         <>
                             <img
                                 className="dark:hidden"
-                                src="/images/logo/logo.svg"
+                                src="/images/logo/logo.png"
                                 alt="Logo"
                                 width={150}
                                 height={40}
                             />
                             <img
                                 className="hidden dark:block"
-                                src="/images/logo/logo-dark.svg"
+                                src="/images/logo/logo-dark.png"
                                 alt="Logo"
                                 width={150}
                                 height={40}
@@ -327,7 +316,7 @@ const AppSidebar = () => {
                         </>
                     ) : (
                         <img
-                            src="/images/logo/logo-icon.svg"
+                            src="/logo-icon.png"
                             alt="Logo"
                             width={32}
                             height={32}
@@ -372,7 +361,6 @@ const AppSidebar = () => {
                         </div>
                     </div>
                 </nav>
-                {isExpanded || isHovered || isMobileOpen ? <SidebarWidget/> : null}
             </div>
         </aside>
     );
