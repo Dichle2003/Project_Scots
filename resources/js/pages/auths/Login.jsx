@@ -177,11 +177,7 @@ const XIcon = ({ className = "w-5 h-5" }) => (
 
           <div className="items-center hidden w-1/2 bg-brand-950 dark:bg-white/5 lg:flex">
             <div className="mx-auto text-center flex items-center gap-5">
-              <img className="dark:block w-20" src="./images/logo/logo-icon.png" alt="Logo"/>
-                <div className="text-5xl font-bold text-white">
-                    <div>SCOTS</div>
-                    <div>ENGLISH</div>
-                     </div>
+              <img className="dark:block w-150" src="./images/logo/logo-dark.png" alt="Logo"/>
             </div>
           </div>
 
