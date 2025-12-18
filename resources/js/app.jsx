@@ -2,7 +2,7 @@ import React from 'react';
 import {HelmetProvider} from "react-helmet-async";
 import {createRoot} from 'react-dom/client';
 import "./index.css";
-import {AppWrapper} from "./common/PageMeta.jsx";
+import "antd/dist/reset.css";
 import {ThemeProvider} from "./context/ThemeContext.jsx"
 import {RouterProvider} from "react-router-dom";
 import router from "./router";
@@ -12,9 +12,7 @@ root.render(
     <React.StrictMode>
         <HelmetProvider>
             <ThemeProvider>
-                {/*<AppWrapper>*/}
-                    <RouterProvider router={router}/>
-                {/*</AppWrapper>*/}
+                <RouterProvider router={router}/>
             </ThemeProvider>
         </HelmetProvider>
     </React.StrictMode>

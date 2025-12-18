@@ -24,7 +24,6 @@ export function AppWrapper() {
                 )}
             </Helmet>
 
-            <Outlet />
         </>
     );
 }
