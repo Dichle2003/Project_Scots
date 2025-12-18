@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Laravel React</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     @viteReactRefresh
     @vite('resources/js/app.jsx')
 </head>
