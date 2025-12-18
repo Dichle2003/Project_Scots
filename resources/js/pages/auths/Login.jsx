@@ -97,11 +97,11 @@ const XIcon = ({ className = "w-5 h-5" }) => (
 
             <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
               <div>
-                <h1 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-                  Sign In
+                <h1 className=" text-2xl text-gray-800 dark:text-white/90">
+                  Đăng Nhập
                 </h1>
                 <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
-                  Enter your email and password to sign in!
+                  Nhập email và mật khẩu của bạn!
                 </p>
 
                 {/* <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -128,20 +128,20 @@ const XIcon = ({ className = "w-5 h-5" }) => (
                       type="email"
                       value={email}
                       onChange={(e)=>setEmail(e.target.value)}
-                      placeholder="info@gmail.com"
+                      placeholder="info@scotsenglish.com"
                       className="w-full h-11 px-4 text-sm border rounded-lg bg-transparent border-gray-300 focus:ring-brand-500/20 focus:border-brand-300 dark:border-gray-700 dark:text-white"
                     />
                   </div>
 
                   <div>
                     <label className="block mb-1 text-sm text-gray-700 dark:text-gray-400">
-                      Password
+                      Mật khẩu
                     </label>
                     <input
                       type="password"
                       value={password}
                       onChange={(e)=>setPassword(e.target.value)}
-                      placeholder="Enter your password"
+                      placeholder="Nhập mật khẩu "
                       className="w-full h-11 px-4 text-sm border rounded-lg bg-transparent border-gray-300 focus:ring-brand-500/20 focus:border-brand-300 dark:border-gray-700 dark:text-white"
                     />
                   </div>
@@ -149,7 +149,7 @@ const XIcon = ({ className = "w-5 h-5" }) => (
                   <div className="flex items-center justify-between text-sm">
                     <label className="flex items-center gap-2 text-gray-700 dark:text-gray-400">
                       <input type="checkbox" />
-                      Keep me logged in
+                      Ghi nhớ
                     </label>
 
                     {/* <Link
@@ -160,17 +160,17 @@ const XIcon = ({ className = "w-5 h-5" }) => (
                     </Link> */}
                   </div>
 
-                  <button className="w-full py-3 text-sm text-white rounded-lg bg-brand-500 hover:bg-brand-600">
-                    Sign in
+                  <button className="w-full py-3 text-sm   rounded-lg bg-brand-500 hover:bg-brand-600">
+                    <div className="text-white" >Đăng nhập</div>
                   </button>
                 </form>
 
-                <p className="mt-6 text-sm text-center text-gray-700 dark:text-gray-400">
-                  Don't have an account?{" "}
-                  {/* <Link to="/signup" className="text-brand-500 hover:text-brand-600">
-                    Sign Up
-                  </Link> */}
-                </p>
+                {/*<p className="mt-6 text-sm text-center text-gray-700 dark:text-gray-400">*/}
+                {/*  Don't have an account?{" "}*/}
+                {/*  /!* <Link to="/signup" className="text-brand-500 hover:text-brand-600">*/}
+                {/*    Sign Up*/}
+                {/*  </Link> *!/*/}
+                {/*</p>*/}
               </div>
             </div>
           </div>
