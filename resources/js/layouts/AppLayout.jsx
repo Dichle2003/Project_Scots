@@ -25,10 +25,8 @@ const LayoutContent = () => {
                 >
                     <AppHeader />
 
-                    <div className="p-4 mx-auto max-w-layout md:p-6">
-                        <div className="container mx-auto w-full">
-                            <Outlet />
-                        </div>
+                    <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+                        <Outlet />
                     </div>
                 </div>
             </div>
