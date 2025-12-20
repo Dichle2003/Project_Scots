@@ -3,22 +3,6 @@ import {Table} from 'antd';
 import {createStyles} from 'antd-style';
 import useTableStyle from "@/components/styles/tableStyle";
 
-const useStyle = createStyles(({css, token}) => {
-    const {antCls} = token;
-    return {
-        customTable: css`
-            ${antCls}-table {
-                ${antCls}-table-container {
-                    ${antCls}-table-body,
-                    ${antCls}-table-content {
-                        scrollbar-width: thin;
-                        scrollbar-color: #eaeaea transparent;
-                    }
-                }
-            }
-        `,
-    };
-});
 
 const columns = [
     {
@@ -71,7 +55,6 @@ const dataSource = [
     {key: '4', name: 'Ethan', age: 40, address: 'London Park'},
     {key: '5', name: 'Olivia', age: 32, address: 'New York Park'},
     {key: '6', name: 'Ethan', age: 40, address: 'London Park'},
-
     {key: '7', name: 'Olivia', age: 32, address: 'New York Park'},
     {key: '8', name: 'Ethan', age: 40, address: 'London Park'},
     {key: '9', name: 'Olivia', age: 32, address: 'New York Park'},
@@ -85,27 +68,42 @@ const Home = () => {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     return (
-        <div
-            className="border bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
-            <Table
-                className={styles.customTable}
-                columns={columns}
-                dataSource={dataSource}
-                scroll={{x: 'max-content'}}
-                pagination={{
-                    current: page,
-                    pageSize: pageSize,
-                    total: dataSource.length,
-                    showSizeChanger: true,
-                    pageSizeOptions: [10, 20, 50, 100],
-                    showTotal: (total, range) =>
-                        `${range[0]}-${range[1]} / ${total}`,
-                    onChange: (page, pageSize) => {
-                        setPage(page);
-                        setPageSize(pageSize);
-                    },
-                }}
-            />
+        <div>
+            <div className="space-y-6">
+                <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] ">
+                    <div className="px-6 py-5"><h3
+                        className="text-base font-medium text-gray-800 dark:text-white/90">Basic
+                        Table 1</h3></div>
+                    <div className="p-4 border-t border-gray-100 dark:border-gray-800 sm:p-6">
+                        <div className="space-y-6">
+                            <div
+                                className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+                                <div className="max-w-full overflow-x-auto">
+                                    <Table
+                                        className={styles.customTable}
+                                        columns={columns}
+                                        dataSource={dataSource}
+                                        pagination={{
+                                            current: page,
+                                            pageSize: pageSize,
+                                            total: dataSource.length,
+                                            showSizeChanger: true,
+                                            pageSizeOptions: [10, 20, 50, 100],
+                                            showTotal: (total, range) =>
+                                                `${range[0]}-${range[1]} / ${total}`,
+                                            onChange: (page, pageSize) => {
+                                                setPage(page);
+                                                setPageSize(pageSize);
+                                            },
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
     );
