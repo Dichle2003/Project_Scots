@@ -6,7 +6,7 @@ import Input from "../form/input/InputField";
 import Checkbox from "../form/input/Checkbox";
 import Button from "../ui/button/Button";
 import {useDispatch, useSelector} from "react-redux";
-import {loginAsync} from "@/store/modules/storeUser";
+import {loginAsync} from "@/store/modules/storeAuth";
 
 function SignInForm() {
     const dispatch = useDispatch();
