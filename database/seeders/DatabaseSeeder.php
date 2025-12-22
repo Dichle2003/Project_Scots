@@ -18,16 +18,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-        DB::table('users')->updateOrInsert(
-            ['email' => 'super_admin@gmail.com'],
-            [
-                'name' => 'Quản trị viên',
-                'email' => 'super_admin@gmail.com',
-                'email_verified_at' => now(),
-                'password' => Hash::make('123456a@'),
-                'remember_token' => Str::random(10),
-            ],
-        );
+//        // User::factory(10)->create();
+//        DB::table('users')->updateOrInsert(
+//            ['email' => 'super_admin@gmail.com'],
+//            [
+//                'name' => 'Quản trị viên',
+//                'email' => 'super_admin@gmail.com',
+//                'email_verified_at' => now(),
+//                'password' => Hash::make('123456a@'),
+//                'remember_token' => Str::random(10),
+//            ],
+//        );
+        User::factory()->count(1000)->create();
     }
 }

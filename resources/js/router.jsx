@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import AppLayout from "./layouts/AppLayout";
 import Home from "./pages/Home";
 import Login from "./pages/auths/Login";
+import UserList from "@/pages/users/UserList";
 
 /* check auth tạm thời bằng localStorage */
 const isAuthenticated = () => {
@@ -35,6 +36,13 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <Home />,
+                handle: {
+                    title: "Trang chủ",
+                },
+            },
+            {
+                path: "/users",
+                element: <UserList />,
                 handle: {
                     title: "Trang chủ",
                 },

@@ -21,14 +21,9 @@ import SidebarWidget from "./SidebarWidget";
 
 const navItems = [
     {
-        icon: <GridIcon/>,
-        name: "Dashboard",
-        subItems: [{name: "Ecommerce", path: "/", pro: false}],
-    },
-    {
-        icon: <CalenderIcon/>,
-        name: "Calendar",
-        path: "/calendar",
+        icon: <UserCircleIcon/>,
+        name: "Nhân sự",
+        path: "/users",
     },
     {
         icon: <UserCircleIcon/>,
