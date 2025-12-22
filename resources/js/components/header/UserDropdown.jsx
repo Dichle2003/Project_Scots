@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../store/modules/storeUser";
+import {logout} from "@/store/modules/storeAuth";
 
 
 
@@ -19,7 +19,7 @@ export default function UserDropdown() {
         dispatch(logout());
         closeDropdown();
         navigate('/login');
-        
+
     }
 
     const toggleDropdown = () => {
