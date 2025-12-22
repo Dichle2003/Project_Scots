@@ -9,7 +9,7 @@ export const loginAsync = createAsyncThunk(
             if (!response.status) {
                 return thunkAPI.rejectWithValue(data.message || "Login failed");
             }
-            return response.data; // trả về toàn bộ JSON
+            return response.data; 
         } catch (err) {
             return thunkAPI.rejectWithValue(
                 err.response?.data?.message || "Server error"
@@ -19,13 +19,15 @@ export const loginAsync = createAsyncThunk(
 );
 const user = createSlice({
     name: 'users',
-    initialState:{
-        user: localStorage.getItem("user"),
-        token: localStorage.getItem("token"),
-        isAuthenticated: !!localStorage.getItem("token"),
-        loading: false,
-        error: null,
-    },
+   initialState: {
+  user: localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user"))
+    : null,
+  token: localStorage.getItem("token"),
+  isAuthenticated: !!localStorage.getItem("token"),
+  loading: false,
+  error: null,
+},
     reducers:{
         logout: (state) => {
             state.user = null;
@@ -50,7 +52,7 @@ const user = createSlice({
 
                 // Lưu token vào localStorage
                 localStorage.setItem("token", access_token);
-                localStorage.setItem("user", user);
+                localStorage.setItem("user",JSON.stringify(user));
 
             })
             .addCase(loginAsync.rejected, (state, action) => {

@@ -1,10 +1,26 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { Dropdown } from "../ui/dropdown/Dropdown";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../store/modules/storeUser";
+
+
 
 export default function UserDropdown() {
     const [isOpen, setIsOpen] = useState(false);
+
+    const user = useSelector((state) => state.user?.user);
+
+    // logout
+    const navigate= useNavigate();
+    const dispatch = useDispatch();
+    const handleLogout=()=>{
+        dispatch(logout());
+        closeDropdown();
+        navigate('/login');
+        
+    }
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -24,7 +40,7 @@ export default function UserDropdown() {
           <img src="/images/user/owner.jpg" alt="User" />
         </span>
 
-                <span className="mr-1 font-medium text-theme-sm">Musharof</span>
+                <span className="mr-1 font-medium text-theme-sm">{user?.name || "Guest"}</span>
 
                 <svg
                     className={`transition-transform duration-200 stroke-gray-500 dark:stroke-gray-400 ${
@@ -91,12 +107,12 @@ export default function UserDropdown() {
                     </li>
                 </ul>
 
-                <Link
-                    to="/signin"
+                <button
+                    onClick={handleLogout}
                     className="flex items-center gap-3 px-3 py-2 mt-3 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5"
                 >
                     Sign out
-                </Link>
+                </button>
             </Dropdown>
         </div>
     );
