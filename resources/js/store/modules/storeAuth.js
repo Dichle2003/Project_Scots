@@ -9,7 +9,7 @@ export const loginAsync = createAsyncThunk(
             if (!response.status) {
                 return thunkAPI.rejectWithValue(data.message || "Login failed");
             }
-            return response.data; 
+            return response.data;
         } catch (err) {
             return thunkAPI.rejectWithValue(
                 err.response?.data?.message || "Server error"
