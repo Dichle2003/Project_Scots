@@ -1,15 +1,15 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import api from "../../api";
 // Hàm async thunk gọi API login
 export const loginAsync = createAsyncThunk(
     "users/loginAsync",
-    async ({ email, password }, thunkAPI) => {
+    async ({email, password}, thunkAPI) => {
         try {
-            const response = await api.post("/login", { email, password });
+            const response = await api.post("/login", {email, password});
             if (!response.status) {
                 return thunkAPI.rejectWithValue(data.message || "Login failed");
             }
-            return response.data; // trả về toàn bộ JSON
+            return response.data;
         } catch (err) {
             return thunkAPI.rejectWithValue(
                 err.response?.data?.message || "Server error"
@@ -19,14 +19,16 @@ export const loginAsync = createAsyncThunk(
 );
 const user = createSlice({
     name: 'auths',
-    initialState:{
-        user: localStorage.getItem("user"),
+    initialState: {
+        user: localStorage.getItem("user")
+            ? JSON.parse(localStorage.getItem("user"))
+            : null,
         token: localStorage.getItem("token"),
         isAuthenticated: !!localStorage.getItem("token"),
         loading: false,
         error: null,
     },
-    reducers:{
+    reducers: {
         logout: (state) => {
             state.user = null;
             state.token = null;
@@ -43,14 +45,14 @@ const user = createSlice({
             })
             .addCase(loginAsync.fulfilled, (state, action) => {
                 state.loading = false;
-                const { access_token, user } = action.payload;
+                const {access_token, user} = action.payload;
                 state.user = user;
                 state.token = access_token;
                 state.isAuthenticated = true;
 
                 // Lưu token vào localStorage
                 localStorage.setItem("token", access_token);
-                localStorage.setItem("user", user);
+                localStorage.setItem("user", JSON.stringify(user));
 
             })
             .addCase(loginAsync.rejected, (state, action) => {
@@ -59,5 +61,5 @@ const user = createSlice({
             });
     },
 })
-export const { login, logout } = user.actions;
+export const {login, logout} = user.actions;
 export default user.reducer;
