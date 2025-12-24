@@ -63,7 +63,7 @@ function SignInForm() {
                             Đăng nhập
                         </h1>
                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                            Enter your email and password to sign in!
+                            Nhập email và mật khẩu của bạn
                         </p>
                     </div>
                     <div>
@@ -106,7 +106,7 @@ function SignInForm() {
                                     <Label htmlFor="email">
                                         Địa chỉ Email <span className="text-error-500">*</span>{" "}
                                     </Label>
-                                    <Input id="email" name="email" placeholder="info@gmail.com" value={email}
+                                    <Input id="email" name="email" placeholder="info@scotsenglish.com" value={email}
                                            onChange={(e) => setEmail(e.target.value)}
                                            error={!!errors.email}
                                            hint={errors.email}
@@ -121,7 +121,7 @@ function SignInForm() {
                                         <Input id="password" name="password" value={password}
                                                onChange={(e) => setPassword(e.target.value)}
                                                type={showPassword ? "text" : "password"}
-                                               placeholder="Enter your password"
+                                               placeholder="Nhập mật khẩu"
                                                error={!!errors.password}
                                                hint={errors.password}
                                                autoComplete="password"
@@ -154,24 +154,14 @@ function SignInForm() {
                                     </Link>
                                 </div>
                                 <div>
-                                    <Button className="w-full" size="sm">
-                                        Sign in
+                                    <Button className="!text-white w-full" size="sm">
+                                        Đăng nhập
                                     </Button>
                                 </div>
                             </div>
                         </form>
 
-                        <div className="mt-5">
-                            <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-                                Don&apos;t have an account? {""}
-                                <Link
-                                    to="/signup"
-                                    className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
-                                >
-                                    Sign Up
-                                </Link>
-                            </p>
-                        </div>
+
                     </div>
                 </div>
             </div>
