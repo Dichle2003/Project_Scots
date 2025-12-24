@@ -5,6 +5,9 @@ import Login from "./pages/auths/Login";
 import UserList from "@/pages/users/UserList";
 import UserCreate from "@/pages/users/UserCreate";
 import UserUpdate from "@/pages/users/UserUpdate";
+import CenterList from "./pages/centers/CenterList.jsx";
+import CenterCreate from "./pages/centers/CenterCreate.jsx";
+
 
 /* check auth tạm thời bằng localStorage */
 const isAuthenticated = () => {
@@ -62,8 +65,23 @@ const router = createBrowserRouter([
                 handle: {
                     title: "Cập nhật nhân sự",
                 },
+            },
+            {
+                path: "/centers",
+                element: <CenterList />,
+                handle: {
+                    title: "Danh sách trung tâm",
+                },
+            },
+            {
+                path: "/centers/createcenter",
+                element: <CenterCreate />,
+                handle: {
+                    title: "Thêm trung tâm",
+                },
             }
         ],
+
     },
     {
         path: "*",

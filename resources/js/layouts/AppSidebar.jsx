@@ -31,9 +31,9 @@ const navItems = [
         path: "/profile",
     },
     {
-        name: "Forms",
-        icon: <ListIcon/>,
-        subItems: [{name: "Form Elements", path: "/form-elements", pro: false}],
+        icon: <BoxCubeIcon/>,
+        name: "Trung Tâm",
+        path: "/centers",
     },
     {
         name: "Tables",
