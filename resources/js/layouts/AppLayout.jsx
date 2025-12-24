@@ -1,21 +1,32 @@
-import React from "react";
-import { SidebarProvider, useSidebar } from "../context/SidebarContext";
-import { Outlet } from "react-router-dom";
+import React, {useEffect} from "react";
+import {SidebarProvider, useSidebar} from "../context/SidebarContext";
+import {Outlet} from "react-router-dom";
 import AppHeader from "./AppHeader";
 import Backdrop from "./Backdrop";
 import AppSidebar from "./AppSidebar";
 import PageMeta from "@/common/PageMeta";
 
-const LayoutContent = () => {
-    const { isExpanded, isHovered, isMobileOpen } = useSidebar();
+import {LoadingProvider, useLoading} from "@/context/LoadingContext";
+import {registerLoading} from "@/context/LoadingService";
+import FullScreenLoading from "@/components/FullScreenLoading";
 
+const LayoutContent = () => {
+    const {isExpanded, isHovered, isMobileOpen} = useSidebar();
+    const {isLoading, setIsLoading} = useLoading();
+
+    useEffect(() => {
+        registerLoading(setIsLoading);
+    }, [setIsLoading]);
     return (
         <>
-            <PageMeta />
+            <PageMeta/>
+            {/* 🔥 GLOBAL LOADING */}
+            <FullScreenLoading visible={isLoading}/>
+
             <div className="min-h-screen xl:flex">
                 <div>
-                    <AppSidebar />
-                    <Backdrop />
+                    <AppSidebar/>
+                    <Backdrop/>
                 </div>
 
                 <div
@@ -23,10 +34,10 @@ const LayoutContent = () => {
                         isExpanded || isHovered ? "lg:ml-[290px]" : "lg:ml-[90px]"
                     } ${isMobileOpen ? "ml-0" : ""}`}
                 >
-                    <AppHeader />
+                    <AppHeader/>
 
                     <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
-                        <Outlet />
+                        <Outlet/>
                     </div>
                 </div>
             </div>
@@ -38,7 +49,9 @@ const LayoutContent = () => {
 const AppLayout = () => {
     return (
         <SidebarProvider>
-            <LayoutContent />
+            <LoadingProvider>
+                <LayoutContent/>
+            </LoadingProvider>
         </SidebarProvider>
     );
 };

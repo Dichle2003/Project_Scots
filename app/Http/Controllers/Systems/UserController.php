@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use App\Services\Systems\UserService as Service;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
@@ -21,6 +22,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         try {
+            Log::info(Auth::user());
             $users = $this->service->getData($request);
             Log::info($request);
             return response()->json([
@@ -57,7 +59,11 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->service->createData($request);
+        return response()->json([
+            'success' => true,
+            'message' => 'Success',
+        ]);
     }
 
     /**
@@ -89,6 +95,11 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $this->service->deleteData($id);
+
+        } catch (\Exception $error) {
+
+        }
     }
 }
