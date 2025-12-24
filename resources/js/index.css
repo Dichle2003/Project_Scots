@@ -777,3 +777,9 @@ span.flatpickr-weekday,
 .simplebar-scrollbar.simplebar-visible:before {
     @apply opacity-100;
 }
+.ant-notification{
+    z-index: 999999999999999!important;
+}
+.ant-pagination.ant-table-pagination.ant-table-pagination-end{
+    padding: 0 10px !important;
+}

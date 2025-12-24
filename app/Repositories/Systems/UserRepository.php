@@ -31,4 +31,9 @@ class UserRepository extends  AbstractRepository
         }
         return $query->paginate($request['limit'] ?? 20);
     }
+
+    public function checkEmail($email):bool
+    {
+        return $this->model->where('email', $email)->exists();
+    }
 }

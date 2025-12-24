@@ -3,6 +3,8 @@ import AppLayout from "./layouts/AppLayout";
 import Home from "./pages/Home";
 import Login from "./pages/auths/Login";
 import UserList from "@/pages/users/UserList";
+import UserCreate from "@/pages/users/UserCreate";
+import UserUpdate from "@/pages/users/UserUpdate";
 
 /* check auth tạm thời bằng localStorage */
 const isAuthenticated = () => {
@@ -47,6 +49,20 @@ const router = createBrowserRouter([
                     title: "Trang chủ",
                 },
             },
+            {
+                path: "/users/create",
+                element: <UserCreate />,
+                handle: {
+                    title: "Thêm mới nhân sự",
+                },
+            },
+            {
+                path: "/users/:id/edit",
+                element: <UserUpdate />,
+                handle: {
+                    title: "Cập nhật nhân sự",
+                },
+            }
         ],
     },
     {

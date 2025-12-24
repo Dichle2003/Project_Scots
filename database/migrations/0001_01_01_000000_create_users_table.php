@@ -15,9 +15,16 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('phone')->nullable();
+            $table->date('birthday')->nullable();
+            $table->string('personal_email')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+
+            $table->string('so_cccd')->nullable();
+            $table->date('date_of_issue')->nullable();
+            $table->string('noi_cap_cccd')->nullable();
             $table->timestamps();
         });
 

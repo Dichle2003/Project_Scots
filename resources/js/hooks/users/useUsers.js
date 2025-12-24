@@ -1,17 +1,21 @@
-import { useQuery } from "@tanstack/react-query";
-import { getUsers } from "@/api/user.api";
-import { toast } from "react-toastify";
+import { useQuery, useMutation, useQueryClient  } from "@tanstack/react-query";
+import { getUsers, createUser } from "@/api/user.api";
 
 export const useUsers = (query) => {
-    console.log('query', query)
     return useQuery({
         queryKey: ["users", query],
         queryFn: () => getUsers(query),
         keepPreviousData: true,
-        onError: (error) => {
-            toast.error(
-                error?.response?.data?.message || "Có lỗi xảy ra"
-            );
+    });
+};
+// Hook thêm mới user
+export const useAddUser = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: createUser, // chỉ định function API
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["users"] });
         },
     });
 };
