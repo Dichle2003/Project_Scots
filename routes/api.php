@@ -12,7 +12,7 @@ Route::middleware('auth:sanctum')->group(function () {
         'users' => UserController::class,
     ]);
 });
-Route::apiResource('centers', CenterController::class);
+// Route::apiResource('centers', CenterController::class);
 
 Route::get('/user', function (Request $request) {
     return $request->user();
