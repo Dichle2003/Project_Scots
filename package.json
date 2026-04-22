@@ -3,7 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build && cp public/build/.vite/manifest.json public/build/manifest.json",
+        "build": "vite build && powershell -Command \"Copy-Item 'public/build/.vite/manifest.json' 'public/build/manifest.json'\"", 
         "dev": "vite"
     },
     "devDependencies": {
