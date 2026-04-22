@@ -1,5 +1,5 @@
 import axios from "axios";
-import { showLoading, hideLoading } from "@/context/loadingService";
+import { showLoading, hideLoading } from "@/context/LoadingService";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
