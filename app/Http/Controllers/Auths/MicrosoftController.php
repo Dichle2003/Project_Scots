@@ -17,6 +17,33 @@ class MicrosoftController extends Controller
         return Socialite::driver('microsoft')->redirect();
     }
 
+    private function parseMicrosoftDisplayName(?string $displayName): array
+    {
+        $displayName = trim((string) $displayName);
+
+        if ($displayName === '') {
+            return [
+                'name' => 'Microsoft User',
+                'job_title' => null,
+            ];
+        }
+
+        if (preg_match('/^(.*?)\s*\((.*?)\)\s*$/u', $displayName, $matches)) {
+            $name = trim($matches[1]);
+            $jobTitle = trim($matches[2]);
+
+            return [
+                'name' => $name !== '' ? $name : 'Microsoft User',
+                'job_title' => $jobTitle !== '' ? $jobTitle : null,
+            ];
+        }
+
+        return [
+            'name' => $displayName,
+            'job_title' => null,
+        ];
+    }
+
     public function callback(): RedirectResponse
     {
         // try {
@@ -35,21 +62,29 @@ class MicrosoftController extends Controller
             ]);
         }
 
+        $parsedProfile = $this->parseMicrosoftDisplayName($msUser->getName());
+
         $user = User::query()->where('email', $email)->first();
 
         if (!$user) {
             $user = User::create([
-                'name' => $msUser->getName() ?: 'Microsoft User',
+                'name' => $parsedProfile['name'],
+                'job_title' => $parsedProfile['job_title'],
+                'status' => 'active',
                 'email' => $email,
-                'password' => bcrypt('123456'),
                 'email_verified_at' => now(),
                 'personal_email' => $email,
             ]);
-        }
+        } 
 
         Auth::login($user, true);
         request()->session()->regenerate();
 
-        return redirect('/');
+        $token = $user->createToken('microsoft-login')->plainTextToken;
+        $frontendRedirectUrl = url('/')
+            . '?token=' . urlencode($token)
+            . '&user=' . urlencode(json_encode($user));
+
+        return redirect($frontendRedirectUrl);
     }
 }

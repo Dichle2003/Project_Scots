@@ -8,6 +8,27 @@ import UserUpdate from "@/pages/users/UserUpdate";
 import CenterList from "./pages/centers/CenterList.jsx";
 import CenterCreate from "./pages/centers/CenterCreate.jsx";
 
+const persistMicrosoftLoginFromUrl = () => {
+    const currentUrl = new URL(window.location.href);
+    const token = currentUrl.searchParams.get("token");
+    const user = currentUrl.searchParams.get("user");
+
+    if (!token) {
+        return;
+    }
+
+    localStorage.setItem("token", token);
+
+    if (user) {
+        localStorage.setItem("user", user);
+    }
+
+    currentUrl.searchParams.delete("token");
+    currentUrl.searchParams.delete("user");
+    window.history.replaceState({}, "", `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`);
+};
+
+persistMicrosoftLoginFromUrl();
 
 /* check auth tạm thời bằng localStorage */
 const isAuthenticated = () => {
