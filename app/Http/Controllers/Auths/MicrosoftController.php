@@ -70,14 +70,14 @@ class MicrosoftController extends Controller
             $user = User::create([
                 'name' => $parsedProfile['name'],
                 'job_title' => $parsedProfile['job_title'],
-                'provinder' => 'microsoft',
+                'provider' => 'microsoft',
                 'microsoft_id' => $msUser->getId(),
                 'status' => 'active',
                 'email' => $email,
                 'email_verified_at' => now(),
                 'personal_email' => $email,
             ]);
-        } 
+        }
 
         Auth::login($user, true);
         request()->session()->regenerate();
