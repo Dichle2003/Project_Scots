@@ -81,6 +81,7 @@ const othersItems = [
 const AppSidebar = () => {
     const {isExpanded, isMobileOpen, isHovered, setIsHovered} = useSidebar();
     const location = useLocation();
+    const isCollapsed = !isExpanded && !isMobileOpen;
 
     const [openSubmenu, setOpenSubmenu] = useState(null);
     const [subMenuHeight, setSubMenuHeight] = useState({});
@@ -147,19 +148,24 @@ const AppSidebar = () => {
 
 
     const renderMenuItems = (items, menuType) => (
-        <ul className="flex flex-col gap-4">
+        <ul className="flex flex-col gap-4 overflow-visible">
             {items.map((nav, index) => (
-                <li key={nav.name}>
+                <li key={nav.name} className="relative overflow-visible">
                     {nav.subItems ? (
                         <button
-                            onClick={() => handleSubmenuToggle(index, menuType)}
-                            className={`menu-item group ${
+                            onClick={() => {
+                                if (!isCollapsed) {
+                                    handleSubmenuToggle(index, menuType);
+                                }
+                            }}
+                            title={isCollapsed ? nav.name : undefined}
+                            className={`menu-item group relative overflow-hidden ${
                                 openSubmenu?.type === menuType && openSubmenu?.index === index
                                     ? "menu-item-active"
                                     : "menu-item-inactive"
                             } cursor-pointer ${
-                                !isExpanded && !isHovered
-                                    ? "lg:justify-center"
+                                isCollapsed
+                                    ? "lg:w-[220px] lg:justify-start lg:px-3"
                                     : "lg:justify-start"
                             }`}
                         >
@@ -173,11 +179,17 @@ const AppSidebar = () => {
                               {nav.icon}
                             </span>
 
-                            {(isExpanded || isHovered || isMobileOpen) && (
+                            {(isExpanded || isMobileOpen) && (
                                 <span className="menu-item-text">{nav.name}</span>
                             )}
 
-                            {(isExpanded || isHovered || isMobileOpen) && (
+                            {isCollapsed && (
+                                <span className="ml-3 max-w-0 overflow-hidden whitespace-nowrap text-sm font-medium opacity-0 group-hover:max-w-[140px] group-hover:opacity-100">
+                                    {nav.name}
+                                </span>
+                            )}
+
+                            {(isExpanded || isMobileOpen) && (
                                 <ChevronDownIcon
                                     className={`ml-auto w-5 h-5 transition-transform duration-200 ${
                                         openSubmenu?.type === menuType &&
@@ -192,11 +204,12 @@ const AppSidebar = () => {
                         nav.path && (
                             <Link
                                 to={nav.path}
-                                className={`menu-item group ${
+                                title={isCollapsed ? nav.name : undefined}
+                                className={`menu-item group relative overflow-hidden ${
                                     isActive(nav.path)
                                         ? "menu-item-active"
                                         : "menu-item-inactive"
-                                }`}
+                                } ${isCollapsed ? "lg:w-[220px] lg:justify-start lg:px-3" : "lg:justify-start"}`}
                             >
                                   <span
                                       className={`menu-item-icon-size ${
@@ -208,14 +221,20 @@ const AppSidebar = () => {
                                     {nav.icon}
                                   </span>
 
-                                {(isExpanded || isHovered || isMobileOpen) && (
+                                {(isExpanded || isMobileOpen) && (
                                     <span className="menu-item-text">{nav.name}</span>
+                                )}
+
+                                {isCollapsed && (
+                                    <span className="ml-3 max-w-0 overflow-hidden whitespace-nowrap text-sm font-medium opacity-0 group-hover:max-w-[140px] group-hover:opacity-100">
+                                        {nav.name}
+                                    </span>
                                 )}
                             </Link>
                         )
                     )}
 
-                    {nav.subItems && (isExpanded || isHovered || isMobileOpen) && (
+                    {nav.subItems && (isExpanded || isMobileOpen) && (
                         <div
                             ref={(el) => {
                                 subMenuRefs.current[`${menuType}-${index}`] = el;
@@ -274,22 +293,18 @@ const AppSidebar = () => {
         ${
                 isExpanded || isMobileOpen
                     ? "w-[290px]"
-                    : isHovered
-                        ? "w-[290px]"
-                        : "w-[90px]"
+                    : "w-[90px]"
             }
         ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0`}
-            onMouseEnter={() => !isExpanded && setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
         >
             <div
                 className={`py-3 flex ${
-                    !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
+                    !isExpanded ? "lg:justify-center" : "justify-start"
                 }`}
             >
                 <Link to="/">
-                    {isExpanded || isHovered || isMobileOpen ? (
+                    {isExpanded || isMobileOpen ? (
                         <>
                             <img
                                 className="dark:hidden"
@@ -316,18 +331,18 @@ const AppSidebar = () => {
                     )}
                 </Link>
             </div>
-            <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
+            <div className="flex flex-col overflow-y-auto overflow-x-visible duration-300 ease-linear no-scrollbar">
                 <nav className="mb-6">
                     <div className="flex flex-col gap-4">
                         <div>
                             <h2
                                 className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
-                                    !isExpanded && !isHovered
+                                    !isExpanded
                                         ? "lg:justify-center"
                                         : "justify-start"
                                 }`}
                             >
-                                {isExpanded || isHovered || isMobileOpen ? (
+                                {isExpanded || isMobileOpen ? (
                                     "Menu"
                                 ) : (
                                     <HorizontaLDots className="size-6"/>
@@ -338,12 +353,12 @@ const AppSidebar = () => {
                         <div className="">
                             <h2
                                 className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
-                                    !isExpanded && !isHovered
+                                    !isExpanded
                                         ? "lg:justify-center"
                                         : "justify-start"
                                 }`}
                             >
-                                {isExpanded || isHovered || isMobileOpen ? (
+                                {isExpanded || isMobileOpen ? (
                                     "Others"
                                 ) : (
                                     <HorizontaLDots/>

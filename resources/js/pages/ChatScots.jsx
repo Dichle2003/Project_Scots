@@ -120,7 +120,7 @@ const ChatScots = () => {
 
                 <main className="flex h-full  flex-1 flex-col overflow-hidden">
                     <div className="shrink-0 px-4 pb-4 pt-4 sm:px-6 lg:px-8">
-                        <div className="flex items-center justify-between">
+                        {/* <div className="flex items-center justify-between">
                             <div className="xl:hidden">
                                 <button className={`rounded-xl border p-2 ${palette.soft}`}>
                                     <RiMenuLine className="h-5 w-5" />
@@ -140,54 +140,19 @@ const ChatScots = () => {
                                     <RiUser3Line className="h-4 w-4" />
                                 </button>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
 
                     <div className="flex min-h-0 flex-1 flex-col px-4 pb-6 sm:px-6 lg:px-8">
                         <div className="mx-auto flex h-full w-full max-w-[1280px] flex-col gap-4 overflow-hidden">
-                            <div className="shrink-0 text-center">
-
-                                <p className={`text-xl sm:text-base ${palette.subHeading}`}>
-                                    Chào mừng bạn đến với ChatScots - Nền tảng AI nội bộ
-                                </p>
-                            </div>
+                          
 
                             <div className={`flex min-h-0 flex-1 flex-col overflow-hidden rounded-[28px] border ${palette.card}`}>
-                                <div className="shrink-0 border-b border-inherit px-5 py-4 sm:px-6">
-                                    <div className="">
-                                        <img
-                                            className="dark:hidden justify-center text-center items-center mx-auto"
-                                            src="/images/logo/logo.png"
-                                            alt="Logo"
-                                            width={150}
-                                            height={40}
-                                        />
+                                
 
-                                    </div>
-                                </div>
+                                
 
-                                <div className="min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-6">
-                                    {messages.length === 0 ? (
-                                        <div className={`flex h-full min-h-[240px] items-center justify-center rounded-3xl border px-6 text-center text-sm ${palette.emptyBox}`}>
-                                            Chưa có nội dung nào.
-                                        </div>
-                                    ) : (
-                                        <div className="space-y-4">
-                                            {messages.map((message) => (
-                                                <div key={message.id} className="flex justify-end">
-                                                    <div
-                                                        className={`max-w-[85%] rounded-3xl border border-transparent px-4 py-3 text-sm leading-6 sm:max-w-[70%] ${palette.bubbleUser}`}
-                                                    >
-                                                        {message.content}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                            <div ref={messageEndRef} />
-                                        </div>
-                                    )}
-                                </div>
-
-                                <div className="shrink-0 border-t border-inherit px-4 py-4 sm:px-6 sm:py-5">
+                                <div className=" my-auto py-4 sm:px-6 sm:py-5">
                                     <div className={`rounded-[28px] border p-3 sm:p-4 ${palette.input}`}>
                                         <textarea
                                             value={input}
