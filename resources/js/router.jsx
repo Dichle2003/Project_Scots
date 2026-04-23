@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import AppLayout from "./layouts/AppLayout";
 import Home from "./pages/Home";
+import ChatScots from "./pages/ChatScots";
 import Login from "./pages/auths/Login";
 import UserList from "@/pages/users/UserList";
 import UserCreate from "@/pages/users/UserCreate";
@@ -51,6 +52,18 @@ const router = createBrowserRouter([
         handle: {
             title: "Đăng nhập",
         },
+    },
+    {
+        element: <AppLayout />,
+        children: [
+            {
+                path: "/chat-scots",
+                element: <ChatScots />,
+                handle: {
+                    title: "Chat Scots",
+                },
+            },
+        ],
     },
     {
         element: (

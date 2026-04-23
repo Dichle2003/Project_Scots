@@ -41,12 +41,9 @@ const navItems = [
         subItems: [{name: "Basic Tables", path: "/basic-tables", pro: false}],
     },
     {
-        name: "Pages",
+        name: "Scots AI",
         icon: <PageIcon/>,
-        subItems: [
-            {name: "Blank Page", path: "/blank", pro: false},
-            {name: "404 Error", path: "/error-404", pro: false},
-        ],
+        path: "/chat-scots",
     },
 ];
 
