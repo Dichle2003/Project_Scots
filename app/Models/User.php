@@ -29,6 +29,9 @@ class User extends Authenticatable
         'birthday',
         'phone',
         'personal_email',
+        'microsoft_id',
+        'provider',
+        'status'
     ];
 
     /**
