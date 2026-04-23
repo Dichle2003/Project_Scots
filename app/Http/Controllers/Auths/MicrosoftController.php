@@ -70,6 +70,8 @@ class MicrosoftController extends Controller
             $user = User::create([
                 'name' => $parsedProfile['name'],
                 'job_title' => $parsedProfile['job_title'],
+                'provinder' => 'microsoft',
+                'microsoft_id' => $msUser->getId(),
                 'status' => 'active',
                 'email' => $email,
                 'email_verified_at' => now(),
@@ -80,7 +82,7 @@ class MicrosoftController extends Controller
         Auth::login($user, true);
         request()->session()->regenerate();
 
-        $token = $user->createToken('microsoft-login')->plainTextToken;
+        $token = $user->createToken('microsoft-login')->accessToken;
         $frontendRedirectUrl = url('/')
             . '?token=' . urlencode($token)
             . '&user=' . urlencode(json_encode($user));
