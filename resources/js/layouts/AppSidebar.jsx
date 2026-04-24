@@ -1,85 +1,40 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import {Link, useLocation} from "react-router";
+import { TbMessageChatbot } from "react-icons/tb";
 
 // Assume these icons are imported from an icon library
 import {
-    BoxCubeIcon,
     CalenderIcon,
     ChevronDownIcon,
-    GridIcon,
     HorizontaLDots,
-    ListIcon,
     PageIcon,
-    PieChartIcon,
-    PlugInIcon,
-    TableIcon,
-    UserCircleIcon,
 } from "../icons";
 import {useSidebar} from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
 
 
 const navItems = [
-    {
-        icon: <UserCircleIcon/>,
-        name: "Nhân sự",
-        path: "/users",
-    },
-    {
-        icon: <UserCircleIcon/>,
-        name: "User Profile",
-        path: "/profile",
-    },
-    {
-        icon: <BoxCubeIcon/>,
-        name: "Trung Tâm",
-        path: "/centers",
-    },
-    {
-        name: "Tables",
-        icon: <TableIcon/>,
-        subItems: [{name: "Basic Tables", path: "/basic-tables", pro: false}],
-    },
+   
     {
         name: "Scots AI",
-        icon: <PageIcon/>,
+        icon: <TbMessageChatbot />,
         path: "/chat-scots",
     },
 ];
 
 const othersItems = [
-    {
-        icon: <PieChartIcon/>,
-        name: "Charts",
-        subItems: [
-            {name: "Line Chart", path: "/line-chart", pro: false},
-            {name: "Bar Chart", path: "/bar-chart", pro: false},
-        ],
-    },
-    {
-        icon: <BoxCubeIcon/>,
-        name: "UI Elements",
-        subItems: [
-            {name: "Alerts", path: "/alerts", pro: false},
-            {name: "Avatar", path: "/avatars", pro: false},
-            {name: "Badge", path: "/badge", pro: false},
-            {name: "Buttons", path: "/buttons", pro: false},
-            {name: "Images", path: "/images", pro: false},
-            {name: "Videos", path: "/videos", pro: false},
-        ],
-    },
-    {
-        icon: <PlugInIcon/>,
-        name: "Authentication",
-        subItems: [
-            {name: "Sign In", path: "/signin", pro: false},
-            {name: "Sign Up", path: "/signup", pro: false},
-        ],
-    },
+   
 ];
 
 const AppSidebar = () => {
-    const {isExpanded, isMobileOpen, isHovered, setIsHovered} = useSidebar();
+    const {
+        isExpanded,
+        isMobileOpen,
+        isHovered,
+        setIsHovered,
+        toggleSidebar,
+        toggleMobileSidebar,
+    } = useSidebar();
     const location = useLocation();
     const isCollapsed = !isExpanded && !isMobileOpen;
 
@@ -146,6 +101,13 @@ const AppSidebar = () => {
         });
     };
 
+    const handleSidebarToggle = () => {
+        if (window.innerWidth >= 1024) {
+            toggleSidebar();
+        } else {
+            toggleMobileSidebar();
+        }
+    };
 
     const renderMenuItems = (items, menuType) => (
         <ul className="flex flex-col gap-4 overflow-visible">
@@ -335,37 +297,57 @@ const AppSidebar = () => {
                 <nav className="mb-6">
                     <div className="flex flex-col gap-4">
                         <div>
-                            <h2
-                                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
-                                    !isExpanded
-                                        ? "lg:justify-center"
-                                        : "justify-start"
+                            <div
+                                className={`mb-4 flex items-center ${
+                                    !isExpanded ? "lg:justify-center" : "justify-end"
                                 }`}
                             >
-                                {isExpanded || isMobileOpen ? (
-                                    "Menu"
-                                ) : (
-                                    <HorizontaLDots className="size-6"/>
-                                )}
-                            </h2>
+                                <button
+                                    type="button"
+                                    onClick={handleSidebarToggle}
+                                    aria-label={isExpanded || isMobileOpen ? "Thu gọn menu" : "Mở rộng menu"}
+                                    className={`hidden lg:flex items-center justify-center h-9 w-9 rounded-lg border border-gray-200 text-gray-500 transition hover:bg-gray-100 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 ${
+                                        !isExpanded ? "absolute  top-34" : ""
+                                    }`}
+                                >
+                                    {isExpanded ? (
+                                        <svg
+                                            width="18"
+                                            height="18"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                d="M15 6L9 12L15 18"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            />
+                                        </svg>
+                                    ) : (
+                                        <svg
+                                            width="18"
+                                            height="18"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                d="M9 6L15 12L9 18"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            />
+                                        </svg>
+                                    )}
+                                </button>
+                            </div>
                             {renderMenuItems(navItems, "main")}
                         </div>
-                        <div className="">
-                            <h2
-                                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
-                                    !isExpanded
-                                        ? "lg:justify-center"
-                                        : "justify-start"
-                                }`}
-                            >
-                                {isExpanded || isMobileOpen ? (
-                                    "Others"
-                                ) : (
-                                    <HorizontaLDots/>
-                                )}
-                            </h2>
-                            {renderMenuItems(othersItems, "others")}
-                        </div>
+                        
                     </div>
                 </nav>
             </div>

@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { use, useEffect, useMemo, useRef, useState } from "react";
+import {useUsers} from "../hooks/users/useUsers";
 import {
     RiAddLine,
     RiArrowDownSLine,
@@ -14,7 +15,9 @@ import {
     RiUser3Line,
 } from "react-icons/ri";
 import { Link } from "react-router-dom";
-
+const raw = localStorage.getItem("user");
+const user = raw ? JSON.parse(raw) : null;
+const name = user?.name ?? "bạn";
 const menuItems = [
     { icon: RiAddLine, label: "New chat", active: true },
     { icon: RiSearchLine, label: "Search" },
@@ -120,34 +123,16 @@ const ChatScots = () => {
 
                 <main className="flex h-full  flex-1 flex-col overflow-hidden">
                     <div className="shrink-0 px-4 pb-4 pt-4 sm:px-6 lg:px-8">
-                        {/* <div className="flex items-center justify-between">
-                            <div className="xl:hidden">
-                                <button className={`rounded-xl border p-2 ${palette.soft}`}>
-                                    <RiMenuLine className="h-5 w-5" />
-                                </button>
-                            </div>
-
-                            <div className="ml-auto flex items-center gap-3">
-                                <button
-                                    type="button"
-                                    onClick={() => setTheme((prev) => (prev === "dark" ? "light" : "dark"))}
-                                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition ${palette.topButton}`}
-                                >
-                                    {theme === "dark" ? <RiSunLine className="h-4 w-4" /> : <RiMoonClearLine className="h-4 w-4" />}
-                                    {theme === "dark" ? "Light mode" : "Dark mode"}
-                                </button>
-                                <button className={`flex h-9 w-9 items-center justify-center rounded-full border transition ${palette.soft}`}>
-                                    <RiUser3Line className="h-4 w-4" />
-                                </button>
-                            </div>
-                        </div> */}
+                      
                     </div>
 
                     <div className="flex min-h-0 flex-1 flex-col px-4 pb-6 sm:px-6 lg:px-8">
                         <div className="mx-auto flex h-full w-full max-w-[1280px] flex-col gap-4 overflow-hidden">
                           
-
-                            <div className={`flex min-h-0 flex-1 flex-col overflow-hidden rounded-[28px] border ${palette.card}`}>
+                            <div className="text-2xl text-center" >
+                                xin chào {name}
+                            </div>
+                            
                                 
 
                                 
@@ -188,7 +173,7 @@ const ChatScots = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                           
                         </div>
                     </div>
                 </main>
