@@ -128,7 +128,11 @@ const ChatScots = () => {
 
                     <div className="flex min-h-0 flex-1 flex-col px-4 pb-6 sm:px-6 lg:px-8">
                         <div className="mx-auto flex h-full w-full max-w-[1280px] flex-col gap-4 overflow-hidden">
-                          
+                            <div>
+                                <select className="border border-gray-100 bg-white text-gray-100 placeholder:text-gray-100 focus:ring-blue-100 focus:border-blue-100 rounded-2xl py-2 px-4" nam e="" id="">
+                                    <option value="">AI Agent</option>
+                                </select>
+                            </div>
                             <div className="text-2xl text-center" >
                                 xin chào {name}
                             </div>

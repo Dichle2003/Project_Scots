@@ -1,48 +1,36 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import {Link, useLocation} from "react-router";
-import { TbMessageChatbot } from "react-icons/tb";
+import {TbMessageChatbot} from "react-icons/tb";
+import {useSelector} from "react-redux";
 
-// Assume these icons are imported from an icon library
-import {
-    CalenderIcon,
-    ChevronDownIcon,
-    HorizontaLDots,
-    PageIcon,
-} from "../icons";
+import {ChevronDownIcon} from "../icons";
 import {useSidebar} from "../context/SidebarContext";
-import SidebarWidget from "./SidebarWidget";
-
 
 const navItems = [
-   
     {
         name: "Scots AI",
-        icon: <TbMessageChatbot />,
+        icon: <TbMessageChatbot className="text-[22px]"/>,
         path: "/chat-scots",
     },
 ];
 
-const othersItems = [
-   
-];
+const othersItems = [];
 
 const AppSidebar = () => {
     const {
         isExpanded,
         isMobileOpen,
-        isHovered,
-        setIsHovered,
         toggleSidebar,
         toggleMobileSidebar,
     } = useSidebar();
     const location = useLocation();
+    const user = useSelector((state) => state.user?.user);
     const isCollapsed = !isExpanded && !isMobileOpen;
 
     const [openSubmenu, setOpenSubmenu] = useState(null);
     const [subMenuHeight, setSubMenuHeight] = useState({});
     const subMenuRefs = useRef({});
 
-    // const isActive = (path: string) => location.pathname === path;
     const isActive = useCallback(
         (path) => location.pathname === path,
         [location.pathname]
@@ -109,10 +97,12 @@ const AppSidebar = () => {
         }
     };
 
+    const collapsedItemClass = "mx-auto flex h-11 w-11 items-center justify-center rounded-2xl px-0";
+
     const renderMenuItems = (items, menuType) => (
-        <ul className="flex flex-col gap-4 overflow-visible">
+        <ul className={`flex overflow-visible ${isCollapsed ? "flex-col items-center gap-3" : "flex-col gap-4"}`}>
             {items.map((nav, index) => (
-                <li key={nav.name} className="relative overflow-visible">
+                <li key={nav.name} className={`relative overflow-visible ${isCollapsed ? "w-full flex justify-center" : ""}`}>
                     {nav.subItems ? (
                         <button
                             onClick={() => {
@@ -127,7 +117,7 @@ const AppSidebar = () => {
                                     : "menu-item-inactive"
                             } cursor-pointer ${
                                 isCollapsed
-                                    ? "lg:w-[220px] lg:justify-start lg:px-3"
+                                    ? collapsedItemClass
                                     : "lg:justify-start"
                             }`}
                         >
@@ -136,19 +126,13 @@ const AppSidebar = () => {
                                     openSubmenu?.type === menuType && openSubmenu?.index === index
                                         ? "menu-item-icon-active"
                                         : "menu-item-icon-inactive"
-                                }`}
+                                } ${isCollapsed ? "!mr-0" : ""}`}
                             >
-                              {nav.icon}
+                                {nav.icon}
                             </span>
 
                             {(isExpanded || isMobileOpen) && (
                                 <span className="menu-item-text">{nav.name}</span>
-                            )}
-
-                            {isCollapsed && (
-                                <span className="ml-3 max-w-0 overflow-hidden whitespace-nowrap text-sm font-medium opacity-0 group-hover:max-w-[140px] group-hover:opacity-100">
-                                    {nav.name}
-                                </span>
                             )}
 
                             {(isExpanded || isMobileOpen) && (
@@ -171,26 +155,20 @@ const AppSidebar = () => {
                                     isActive(nav.path)
                                         ? "menu-item-active"
                                         : "menu-item-inactive"
-                                } ${isCollapsed ? "lg:w-[220px] lg:justify-start lg:px-3" : "lg:justify-start"}`}
+                                } ${isCollapsed ? collapsedItemClass : "lg:justify-start"}`}
                             >
-                                  <span
-                                      className={`menu-item-icon-size ${
-                                          isActive(nav.path)
-                                              ? "menu-item-icon-active"
-                                              : "menu-item-icon-inactive"
-                                      }`}
-                                  >
+                                <span
+                                    className={`menu-item-icon-size ${
+                                        isActive(nav.path)
+                                            ? "menu-item-icon-active"
+                                            : "menu-item-icon-inactive"
+                                    } ${isCollapsed ? "!mr-0" : ""}`}
+                                >
                                     {nav.icon}
-                                  </span>
+                                </span>
 
                                 {(isExpanded || isMobileOpen) && (
                                     <span className="menu-item-text">{nav.name}</span>
-                                )}
-
-                                {isCollapsed && (
-                                    <span className="ml-3 max-w-0 overflow-hidden whitespace-nowrap text-sm font-medium opacity-0 group-hover:max-w-[140px] group-hover:opacity-100">
-                                        {nav.name}
-                                    </span>
                                 )}
                             </Link>
                         )
@@ -210,7 +188,7 @@ const AppSidebar = () => {
                                         : "0px",
                             }}
                         >
-                            <ul className="mt-2 space-y-1 ml-9">
+                            <ul className="mt-2 ml-9 space-y-1">
                                 {nav.subItems.map((subItem) => (
                                     <li key={subItem.name}>
                                         <Link
@@ -223,20 +201,19 @@ const AppSidebar = () => {
                                         >
                                             {subItem.name}
 
-                                            <span className="flex items-center gap-1 ml-auto">
-                                                  {subItem.new && (
-                                                      <span
-                                                          className={`menu-dropdown-badge ${
-                                                              isActive(subItem.path)
-                                                                  ? "menu-dropdown-badge-active"
-                                                                  : "menu-dropdown-badge-inactive"
-                                                          }`}
-                                                      >
-                                                      new
+                                            <span className="ml-auto flex items-center gap-1">
+                                                {subItem.new && (
+                                                    <span
+                                                        className={`menu-dropdown-badge ${
+                                                            isActive(subItem.path)
+                                                                ? "menu-dropdown-badge-active"
+                                                                : "menu-dropdown-badge-inactive"
+                                                        }`}
+                                                    >
+                                                        new
                                                     </span>
-                                                  )}
-
-                                        </span>
+                                                )}
+                                            </span>
                                         </Link>
                                     </li>
                                 ))}
@@ -248,21 +225,15 @@ const AppSidebar = () => {
         </ul>
     );
 
-
     return (
         <aside
-            className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200
-        ${
-                isExpanded || isMobileOpen
-                    ? "w-[290px]"
-                    : "w-[90px]"
-            }
-        ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
-        lg:translate-x-0`}
+            className={`fixed top-0 left-0 z-50 mt-16 flex h-screen flex-col border-r border-gray-200 bg-white px-2 text-gray-900 transition-all duration-300 ease-in-out dark:border-gray-800 dark:bg-gray-900 lg:mt-0 ${
+                isExpanded || isMobileOpen ? "w-[290px] px-5" : "w-[60px] px-2"
+            } ${isMobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
         >
             <div
-                className={`py-3 flex ${
-                    !isExpanded ? "lg:justify-center" : "justify-start"
+                className={`flex py-3 ${
+                    !isExpanded ? "justify-center" : "justify-start"
                 }`}
             >
                 <Link to="/">
@@ -287,27 +258,24 @@ const AppSidebar = () => {
                         <img
                             src="/images/logo/logo-icon.png"
                             alt="Logo"
-                            width={32}
-                            height={32}
+                            width={28}
+                            height={28}
                         />
                     )}
                 </Link>
             </div>
-            <div className="flex flex-col overflow-y-auto overflow-x-visible duration-300 ease-linear no-scrollbar">
+
+            <div className="flex flex-1 flex-col overflow-y-auto overflow-x-visible no-scrollbar">
                 <nav className="mb-6">
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-3">
                         <div>
-                            <div
-                                className={`mb-4 flex items-center ${
-                                    !isExpanded ? "lg:justify-center" : "justify-end"
-                                }`}
-                            >
+                            <div className={`mb-3 flex ${isCollapsed ? "justify-center" : "justify-end"}`}>
                                 <button
                                     type="button"
                                     onClick={handleSidebarToggle}
                                     aria-label={isExpanded || isMobileOpen ? "Thu gọn menu" : "Mở rộng menu"}
-                                    className={`hidden lg:flex items-center justify-center h-9 w-9 rounded-lg border border-gray-200 text-gray-500 transition hover:bg-gray-100 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 ${
-                                        !isExpanded ? "absolute  top-34" : ""
+                                    className={`flex items-center justify-center rounded-2xl border border-gray-200 text-gray-500 transition hover:bg-gray-100 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-gray-800 ${
+                                        isCollapsed ? "h-10 w-10" : "h-9 w-9"
                                     }`}
                                 >
                                     {isExpanded ? (
@@ -318,12 +286,20 @@ const AppSidebar = () => {
                                             fill="none"
                                             xmlns="http://www.w3.org/2000/svg"
                                         >
-                                            <path
-                                                d="M15 6L9 12L15 18"
+                                            <rect
+                                                x="3.5"
+                                                y="5"
+                                                width="17"
+                                                height="14"
+                                                rx="3"
                                                 stroke="currentColor"
-                                                strokeWidth="2"
+                                                strokeWidth="1.8"
+                                            />
+                                            <path
+                                                d="M9 5V19"
+                                                stroke="currentColor"
+                                                strokeWidth="1.8"
                                                 strokeLinecap="round"
-                                                strokeLinejoin="round"
                                             />
                                         </svg>
                                     ) : (
@@ -334,22 +310,80 @@ const AppSidebar = () => {
                                             fill="none"
                                             xmlns="http://www.w3.org/2000/svg"
                                         >
-                                            <path
-                                                d="M9 6L15 12L9 18"
+                                            <rect
+                                                x="3.5"
+                                                y="5"
+                                                width="17"
+                                                height="14"
+                                                rx="3"
                                                 stroke="currentColor"
-                                                strokeWidth="2"
+                                                strokeWidth="1.8"
+                                            />
+                                            <path
+                                                d="M15 5V19"
+                                                stroke="currentColor"
+                                                strokeWidth="1.8"
                                                 strokeLinecap="round"
-                                                strokeLinejoin="round"
                                             />
                                         </svg>
                                     )}
                                 </button>
                             </div>
+
                             {renderMenuItems(navItems, "main")}
                         </div>
-                        
                     </div>
                 </nav>
+
+                <div className={`mt-auto border-t border-gray-200 pt-3 dark:border-gray-800 ${isCollapsed ? "pb-3" : "pb-4"}`}>
+                    <button
+                        type="button"
+                        title={isCollapsed ? user?.name || "Tài khoản" : undefined}
+                        className={`w-full rounded-2xl border border-gray-200 bg-white text-left transition hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-800 ${
+                            isCollapsed
+                                ? "mx-auto flex h-11 w-11 items-center justify-center p-0"
+                                : "flex items-center gap-3 px-3 py-3"
+                        }`}
+                    >
+                        <span className={`overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800 ${isCollapsed ? "h-9 w-9" : "h-10 w-10"}`}>
+                            <img
+                                src="/images/user/owner.jpg"
+                                alt="User"
+                                className="h-full w-full object-cover"
+                            />
+                        </span>
+
+                        {!isCollapsed && (
+                            <>
+                                <span className="min-w-0 flex-1">
+                                    <span className="block truncate text-sm font-semibold text-gray-800 dark:text-white/90">
+                                        {user?.name || "Guest"}
+                                    </span>
+                                    <span className="block truncate text-xs text-gray-500 dark:text-gray-400">
+                                        {user?.email || "Tài khoản người dùng"}
+                                    </span>
+                                </span>
+
+                                <svg
+                                    width="18"
+                                    height="18"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="shrink-0 text-gray-400"
+                                >
+                                    <path
+                                        d="M9 6L15 12L9 18"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                            </>
+                        )}
+                    </button>
+                </div>
             </div>
         </aside>
     );
