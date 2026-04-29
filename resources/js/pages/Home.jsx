@@ -1,111 +1,170 @@
-import React, {useState} from 'react';
-import {Table} from 'antd';
-import {createStyles} from 'antd-style';
-import useTableStyle from "@/components/styles/tableStyle";
+import React, {useEffect, useMemo, useRef, useState} from "react";
+import {
+    RiAddLine,
+    RiChat3Line,
+    RiFolderOpenLine,
+    RiMicLine,
+    RiSearchLine,
+    RiSendPlane2Fill,
+    RiSparklingLine,
+} from "react-icons/ri";
+import {useAddChat} from "@/hooks/chats/useChats.js";
 
+const raw = localStorage.getItem("user");
+const user = raw ? JSON.parse(raw) : null;
+const name = user?.name ?? "bạn";
+const menuItems = [{icon: RiAddLine, label: "New chat", active: true}, {
+    icon: RiSearchLine,
+    label: "Search"
+}, {icon: RiChat3Line, label: "Chats"}, {icon: RiFolderOpenLine, label: "Projects"}, {
+    icon: RiSparklingLine,
+    label: "Artifacts"
+},];
 
-const columns = [
-    {
-        title: 'Full Name',
-        width: 100,
-        dataIndex: 'name',
-        key: 'name',
-        fixed: 'start',
-    },
-    {
-        title: 'Age',
-        width: 100,
-        dataIndex: 'age',
-        key: 'age',
-        fixed: 'start',
-        sorter: true,
-    },
-    {title: 'Column 1', dataIndex: 'address', key: '1'},
-    {title: 'Column 2', dataIndex: 'address', key: '2'},
-    {title: 'Column 3', dataIndex: 'address', key: '3'},
-    {title: 'Column 4', dataIndex: 'address', key: '4'},
-    {title: 'Column 5', dataIndex: 'address', key: '5'},
-    {title: 'Column 6', dataIndex: 'address', key: '6'},
-    {title: 'Column 7', dataIndex: 'address', key: '7'},
-    {title: 'Column 8', dataIndex: 'address', key: '8'},
-    {title: 'Column 9', dataIndex: 'address', key: '9'},
-    {title: 'Column 10', dataIndex: 'address', key: '10'},
-    {title: 'Column 11', dataIndex: 'address', key: '11'},
-    {title: 'Column 12', dataIndex: 'address', key: '12'},
-    {title: 'Column 13', dataIndex: 'address', key: '13'},
-    {title: 'Column 14', dataIndex: 'address', key: '14'},
-    {title: 'Column 15', dataIndex: 'address', key: '15'},
-    {title: 'Column 16', dataIndex: 'address', key: '16'},
-    {title: 'Column 17', dataIndex: 'address', key: '17'},
-    {title: 'Column 18', dataIndex: 'address', key: '18'},
-    {title: 'Column 19', dataIndex: 'address', key: '19'},
-    {title: 'Column 20', dataIndex: 'address', key: '20'},
-    {
-        title: 'Action',
-        key: 'operation',
-        fixed: 'end',
-        width: 100,
-        render: () => <a>action</a>,
-    },
-];
-const dataSource = [
-    {key: '1', name: 'Olivia', age: 32, address: 'New York Park'},
-    {key: '2', name: 'Ethan', age: 40, address: 'London Park'},
-    {key: '3', name: 'Olivia', age: 32, address: 'New York Park'},
-    {key: '4', name: 'Ethan', age: 40, address: 'London Park'},
-    {key: '5', name: 'Olivia', age: 32, address: 'New York Park'},
-    {key: '6', name: 'Ethan', age: 40, address: 'London Park'},
-    {key: '7', name: 'Olivia', age: 32, address: 'New York Park'},
-    {key: '8', name: 'Ethan', age: 40, address: 'London Park'},
-    {key: '9', name: 'Olivia', age: 32, address: 'New York Park'},
-    {key: '10', name: 'Ethan', age: 40, address: 'London Park'},
-    {key: '11', name: 'Olivia', age: 32, address: 'New York Park'},
-    {key: '12', name: 'Ethan', age: 40, address: 'London Park'},
+const MicrosoftLogo = () => (
+    <span className="grid h-4 w-4 grid-cols-2 grid-rows-2 gap-[2px] overflow-hidden rounded-[2px]">
+        <span className="bg-[#f25022]"/>
+        <span className="bg-[#7fba00]"/>
+        <span className="bg-[#00a4ef]"/>
+        <span className="bg-[#ffb900]"/>
+    </span>);
 
-];
-const Home = () => {
-    const {styles} = useTableStyle();
-    const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
+const ChatScots = () => {
+    const [theme, setTheme] = useState("light");
+    const [input, setInput] = useState("");
+    const [messages, setMessages] = useState([]);
+    const messageEndRef = useRef(null);
+
+    const storedUser = localStorage.getItem("user");
+    let displayName = "bạn";
+
+    if (storedUser) {
+        try {
+            const parsedUser = JSON.parse(storedUser);
+            displayName = parsedUser?.name || parsedUser?.email || displayName;
+        } catch {
+            displayName = "bạn";
+        }
+    }
+
+    useEffect(() => {
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, []);
+
+    useEffect(() => {
+        messageEndRef.current?.scrollIntoView({behavior: "smooth"});
+    }, [messages]);
+
+    const palette = useMemo(() => {
+        if (theme === "light") {
+            return {
+                // page: "bg-[#f5f1ea] text-[#2a2723]",
+                sidebar: "bg-[#ece4d6] border-[#d8ccb8] text-[#2f2a24]",
+                sidebarMuted: "text-[#7a6d5a]",
+                card: "bg-white border-[#e4d9ca] text-[#2b2622] shadow-[0_20px_70px_rgba(58,44,24,0.08)]",
+                soft: "bg-[#f5efe7] border-[#e7dccf]",
+                bubbleUser: "bg-[#2d2a26] text-[#f8f2e8]",
+                input: "bg-white text-[#2b2622] placeholder:text-[#938675] border-[#e1d7ca]",
+                heading: "text-[#2a2723]",
+                subHeading: "text-[#7c7060]",
+                active: "bg-white text-[#2a2723]",
+                inactive: "text-[#51483f] hover:bg-white/70",
+                topButton: "bg-white border-[#ddd2c4] text-[#3d362f] hover:bg-[#faf7f2]",
+                history: "hover:bg-[#f8f3ec]",
+                emptyBox: "border-dashed border-[#dccfbf] bg-[#faf6f0] text-[#7b6f60]",
+            };
+        }
+
+        return {
+            page: "bg-[#1f1d1b] text-[#f3e4ca]",
+            sidebar: "bg-[#1b1917] border-white/10 text-[#efe2c8]",
+            sidebarMuted: "text-white/35",
+            card: "bg-[#2a2825] border-white/8 text-[#f3e4ca] shadow-[0_20px_70px_rgba(0,0,0,0.25)]",
+            soft: "bg-white/[0.03] border-white/10",
+            bubbleUser: "bg-[#f0d7b3] text-[#231f1b]",
+            input: "bg-[#221f1c] text-[#f4e8d4] placeholder:text-[#9d978f] border-white/10",
+            heading: "text-[#f0d7b3]",
+            subHeading: "text-[#9d978f]",
+            active: "bg-white/6 text-[#f6e7c8]",
+            inactive: "text-white/80 hover:bg-white/5",
+            topButton: "bg-[#171614] border-[#3b3937] text-[#f0d8b1] hover:bg-[#1e1c1a]",
+            history: "hover:bg-white/5",
+            emptyBox: "border-dashed border-white/10 bg-[#24211f] text-[#9d978f]",
+        };
+    }, [theme]);
+    const addMutation = useAddChat();
+    const handleSend = () => {
+        const trimmed = input.trim();
+        if (!trimmed) return;
+        const payload = {
+            id: null,
+            message: trimmed
+        }
+        addMutation.mutate(payload)
+        // setInput("");
+    };
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            handleSend();
+        }
+    };
     return (
-        <div>
-            <div className="space-y-6">
-                <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] ">
-                    <div className="px-6 py-5"><h3
-                        className="text-base font-medium text-gray-800 dark:text-white/90">Basic
-                        Table 1</h3></div>
-                    <div className="p-4 border-t border-gray-100 dark:border-gray-800 sm:p-6">
-                        <div className="space-y-6">
-                            <div
-                                className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-                                <div className="max-w-full overflow-x-auto">
-                                    <Table
-                                        className={styles.customTable}
-                                        columns={columns}
-                                        dataSource={dataSource}
-                                        pagination={{
-                                            current: page,
-                                            pageSize: pageSize,
-                                            total: dataSource.length,
-                                            showSizeChanger: true,
-                                            pageSizeOptions: [10, 20, 50, 100],
-                                            showTotal: (total, range) =>
-                                                `${range[0]}-${range[1]} / ${total}`,
-                                            onChange: (page, pageSize) => {
-                                                setPage(page);
-                                                setPageSize(pageSize);
-                                            },
-                                        }}
-                                    />
+        <div
+            className={`-m-5 h-[calc(90vh+2rem)] overflow-hidden transition-colors duration-300 md:-m-5 md:h-[calc(88vh+3rem)] ${palette.page}`}>
+            <div className="flex h-full overflow-hidden">
+                <main className="flex h-full  flex-1 flex-col overflow-hidden">
+                    <div className="flex min-h-0 flex-1 flex-col px-4 pb-6 sm:px-6 lg:px-8">
+                        <div className="mx-auto flex h-full w-full max-w-[1280px] flex-col gap-4 overflow-hidden">
+                            <div className=" my-auto py-4 sm:px-6 sm:py-5">
+                                <div>
+                                    <h2 className="text-2xl">Xin chào {name}!</h2>
+                                    <p>Chúng ta nên bắt đầu từ đâu nhỉ?</p>
+                                </div>
+                                <div>
+
+                                </div>
+                                <div className={`rounded-[28px] border p-3 sm:p-4 ${palette.input}`}>
+                                      <textarea
+                                          value={input}
+                                          onChange={(event) => setInput(event.target.value)}
+                                          onKeyDown={handleKeyDown}
+                                          rows={2}
+                                          placeholder="Nhập nội dung và nhấn Enter để gửi..."
+                                          className="w-full resize-none bg-transparent text-sm outline-none"
+                                      />
+
+                                    <div className="mt-3 flex items-center justify-between gap-3">
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                type="button"
+                                                className={`flex h-10 w-10 items-center justify-center rounded-full border ${palette.soft} hover:bg-gray-100 transition`}
+                                            >
+                                                <RiAddLine className="h-5 w-5" />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className={`flex h-10 w-10 items-center justify-center rounded-full border ${palette.soft} hover:bg-gray-100 transition`}
+                                            >
+                                                <RiMicLine className="h-4 w-4" />
+                                            </button>
+                                        </div>
+
+                                        <div className="text-[10px] uppercase tracking-wider text-gray-400 font-medium">
+                                            Enter to send
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
+                </main>
             </div>
         </div>
-
-    );
+    )
 };
-export default Home;
+
+export default ChatScots;

@@ -5,6 +5,7 @@ export const loginAsync = createAsyncThunk(
     "users/loginAsync",
     async ({email, password}, thunkAPI) => {
         try {
+            console.log(email, password)
             const response = await api.post("/login", {email, password});
             if (!response.status) {
                 return thunkAPI.rejectWithValue(data.message || "Login failed");

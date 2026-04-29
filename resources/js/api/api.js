@@ -11,7 +11,6 @@ const api = axios.create({
 });
 api.interceptors.request.use(
     (config) => {
-        showLoading();
         const token = localStorage.getItem("token");
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
@@ -19,18 +18,15 @@ api.interceptors.request.use(
         return config;
     },
     (error) => {
-        hideLoading();
         Promise.reject(error)
     }
 );
 
 api.interceptors.response.use(
     (response) => {
-        hideLoading();
         return response.data
     },
     (error) => {
-        hideLoading();
         if (error.response) {
             const { status, data } = error.response;
             const config = error.config;

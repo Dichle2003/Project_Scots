@@ -34,9 +34,9 @@ const LayoutContent = () => {
                         isExpanded ? "lg:ml-[290px]" : "lg:ml-[60px]"
                     } ${isMobileOpen ? "ml-0" : ""}`}
                 >
-                    <AppHeader/>
+                    {/*<AppHeader/>*/}
 
-                    <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+                    <div className="p-4 mx-auto max-w-(--breakpoint-lg) md:p-6">
                         <Outlet/>
                     </div>
                 </div>

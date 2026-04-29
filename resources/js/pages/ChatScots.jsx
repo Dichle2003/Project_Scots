@@ -1,39 +1,33 @@
-import React, { use, useEffect, useMemo, useRef, useState } from "react";
-import {useUsers} from "../hooks/users/useUsers";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import {
     RiAddLine,
-    RiArrowDownSLine,
     RiChat3Line,
     RiFolderOpenLine,
-    RiMenuLine,
     RiMicLine,
-    RiMoonClearLine,
     RiSearchLine,
     RiSendPlane2Fill,
     RiSparklingLine,
-    RiSunLine,
-    RiUser3Line,
 } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import {useAddChat} from "@/hooks/chats/useChats.js";
+
 const raw = localStorage.getItem("user");
 const user = raw ? JSON.parse(raw) : null;
 const name = user?.name ?? "bạn";
-const menuItems = [
-    { icon: RiAddLine, label: "New chat", active: true },
-    { icon: RiSearchLine, label: "Search" },
-    { icon: RiChat3Line, label: "Chats" },
-    { icon: RiFolderOpenLine, label: "Projects" },
-    { icon: RiSparklingLine, label: "Artifacts" },
-];
+const menuItems = [{icon: RiAddLine, label: "New chat", active: true}, {
+    icon: RiSearchLine,
+    label: "Search"
+}, {icon: RiChat3Line, label: "Chats"}, {icon: RiFolderOpenLine, label: "Projects"}, {
+    icon: RiSparklingLine,
+    label: "Artifacts"
+},];
 
 const MicrosoftLogo = () => (
     <span className="grid h-4 w-4 grid-cols-2 grid-rows-2 gap-[2px] overflow-hidden rounded-[2px]">
-        <span className="bg-[#f25022]" />
-        <span className="bg-[#7fba00]" />
-        <span className="bg-[#00a4ef]" />
-        <span className="bg-[#ffb900]" />
-    </span>
-);
+        <span className="bg-[#f25022]"/>
+        <span className="bg-[#7fba00]"/>
+        <span className="bg-[#00a4ef]"/>
+        <span className="bg-[#ffb900]"/>
+    </span>);
 
 const ChatScots = () => {
     const [theme, setTheme] = useState("light");
@@ -61,7 +55,7 @@ const ChatScots = () => {
     }, []);
 
     useEffect(() => {
-        messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        messageEndRef.current?.scrollIntoView({behavior: "smooth"});
     }, [messages]);
 
     const palette = useMemo(() => {
@@ -101,89 +95,72 @@ const ChatScots = () => {
             emptyBox: "border-dashed border-white/10 bg-[#24211f] text-[#9d978f]",
         };
     }, [theme]);
-
+    const addMutation = useAddChat();
     const handleSend = () => {
         const trimmed = input.trim();
         if (!trimmed) return;
-
-        const userMessage = {
-            id: Date.now(),
-            role: "user",
-            content: trimmed,
-        };
-
-        setMessages((prev) => [...prev, userMessage]);
-        setInput("");
+        addMutation.mutate(trimmed)
+        // setInput("");
     };
-
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            handleSend();
+        }
+    };
     return (
-        <div className={`-m-5 h-[calc(90vh+2rem)] overflow-hidden transition-colors duration-300 md:-m-5 md:h-[calc(88vh+3rem)] ${palette.page}`}>
+        <div
+            className={`-m-5 h-[calc(90vh+2rem)] overflow-hidden transition-colors duration-300 md:-m-5 md:h-[calc(88vh+3rem)] ${palette.page}`}>
             <div className="flex h-full overflow-hidden">
-
-
                 <main className="flex h-full  flex-1 flex-col overflow-hidden">
-                    <div className="shrink-0 px-4 pb-4 pt-4 sm:px-6 lg:px-8">
-                      
-                    </div>
-
                     <div className="flex min-h-0 flex-1 flex-col px-4 pb-6 sm:px-6 lg:px-8">
                         <div className="mx-auto flex h-full w-full max-w-[1280px] flex-col gap-4 overflow-hidden">
-                            <div>
-                                <select className="border border-gray-100 bg-white text-gray-100 placeholder:text-gray-100 focus:ring-blue-100 focus:border-blue-100 rounded-2xl py-2 px-4" nam e="" id="">
-                                    <option value="">AI Agent</option>
-                                </select>
-                            </div>
-                            <div className="text-2xl text-center" >
-                                xin chào {name}
-                            </div>
-                            
-                                
+                            <div className=" my-auto py-4 sm:px-6 sm:py-5">
+                                <div>
+                                    <h2 className="text-2xl">Xin chào {name}!</h2>
+                                    <p>Chúng ta nên bắt đầu từ đâu nhỉ?</p>
+                                </div>
+                                <div>
 
-                                
+                                </div>
+                                <div className={`rounded-[28px] border p-3 sm:p-4 ${palette.input}`}>
+                                      <textarea
+                                          value={input}
+                                          onChange={(event) => setInput(event.target.value)}
+                                          onKeyDown={handleKeyDown}
+                                          rows={2}
+                                          placeholder="Nhập nội dung và nhấn Enter để gửi..."
+                                          className="w-full resize-none bg-transparent text-sm outline-none"
+                                      />
 
-                                <div className=" my-auto py-4 sm:px-6 sm:py-5">
-                                    <div className={`rounded-[28px] border p-3 sm:p-4 ${palette.input}`}>
-                                        <textarea
-                                            value={input}
-                                            onChange={(event) => setInput(event.target.value)}
-                                            onKeyDown={(event) => {
-                                                if (event.key === "Enter" && !event.shiftKey) {
-                                                    event.preventDefault();
-                                                    handleSend();
-                                                }
-                                            }}
-                                            rows={4}
-                                            placeholder="Nhập nội dung bạn muốn gửi..."
-                                            className="w-full resize-none bg-transparent text-sm outline-none"
-                                        />
-
-                                        <div className="mt-3 flex items-center justify-between gap-3">
-                                            <div className="flex items-center gap-2">
-                                                <button className={`flex h-10 w-10 items-center justify-center rounded-full border ${palette.soft}`}>
-                                                    <RiAddLine className="h-5 w-5" />
-                                                </button>
-                                                <button className={`flex h-10 w-10 items-center justify-center rounded-full border ${palette.soft}`}>
-                                                    <RiMicLine className="h-4 w-4" />
-                                                </button>
-                                            </div>
-
+                                    <div className="mt-3 flex items-center justify-between gap-3">
+                                        <div className="flex items-center gap-2">
                                             <button
                                                 type="button"
-                                                onClick={handleSend}
-                                                className="flex h-11 w-11 items-center justify-center rounded-full bg-[#d97706] text-white transition hover:scale-[1.02] hover:bg-[#c96c05]"
+                                                className={`flex h-10 w-10 items-center justify-center rounded-full border ${palette.soft} hover:bg-gray-100 transition`}
                                             >
-                                                <RiSendPlane2Fill className="h-4 w-4" />
+                                                <RiAddLine className="h-5 w-5" />
                                             </button>
+                                            <button
+                                                type="button"
+                                                className={`flex h-10 w-10 items-center justify-center rounded-full border ${palette.soft} hover:bg-gray-100 transition`}
+                                            >
+                                                <RiMicLine className="h-4 w-4" />
+                                            </button>
+                                        </div>
+
+                                        <div className="text-[10px] uppercase tracking-wider text-gray-400 font-medium">
+                                            Enter to send
                                         </div>
                                     </div>
                                 </div>
-                           
+                            </div>
                         </div>
                     </div>
                 </main>
             </div>
         </div>
-    );
+    )
 };
 
 export default ChatScots;

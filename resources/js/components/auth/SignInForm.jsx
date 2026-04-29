@@ -7,7 +7,7 @@ import Checkbox from "../form/input/Checkbox";
 import Button from "../ui/button/Button";
 import {useDispatch, useSelector} from "react-redux";
 import {loginAsync} from "@/store/modules/storeAuth";
-
+import {notification} from "antd";
 function SignInForm() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -49,12 +49,24 @@ function SignInForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(false);
-
         if (!validate()) return;
 
-        const resultAction = await dispatch(loginAsync({email, password}));
-        if (loginAsync.rejected.match(resultAction)) {
+        try {
+            const res = await dispatch(
+                loginAsync({ email, password })
+            ).unwrap();
+
+            notification.success({
+                message: "Thành công",
+                description: res.message || "Đăng nhập thành công",
+                placement: "topRight",
+            });
+        } catch (err) {
+            notification.error({
+                message: "Thất bại",
+                description: err,
+                placement: "topRight",
+            });
             setError(true);
         }
     };

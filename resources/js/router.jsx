@@ -1,13 +1,9 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import AppLayout from "./layouts/AppLayout";
-import Home from "./pages/Home";
 import ChatScots from "./pages/ChatScots";
 import Login from "./pages/auths/Login";
-import UserList from "@/pages/users/UserList";
-import UserCreate from "@/pages/users/UserCreate";
-import UserUpdate from "@/pages/users/UserUpdate";
-import CenterList from "./pages/centers/CenterList.jsx";
-import CenterCreate from "./pages/centers/CenterCreate.jsx";
+import Home from "@/pages/Home";
+
 
 const persistMicrosoftLoginFromUrl = () => {
     const currentUrl = new URL(window.location.href);
@@ -54,18 +50,6 @@ const router = createBrowserRouter([
         },
     },
     {
-        element: <AppLayout />,
-        children: [
-            {
-                path: "/chat-scots",
-                element: <ChatScots />,
-                handle: {
-                    title: "Chat Scots",
-                },
-            },
-        ],
-    },
-    {
         element: (
             <ProtectedRoute>
                 <AppLayout />
@@ -76,44 +60,16 @@ const router = createBrowserRouter([
                 path: "/",
                 element: <Home />,
                 handle: {
-                    title: "Trang chủ",
+                    title: "Chat Scots",
                 },
             },
             {
-                path: "/users",
-                element: <UserList />,
+                path: "/c/:id",
+                element: <ChatScots />,
                 handle: {
-                    title: "Trang chủ",
+                    title: "Chat Scots",
                 },
             },
-            {
-                path: "/users/create",
-                element: <UserCreate />,
-                handle: {
-                    title: "Thêm mới nhân sự",
-                },
-            },
-            {
-                path: "/users/:id/edit",
-                element: <UserUpdate />,
-                handle: {
-                    title: "Cập nhật nhân sự",
-                },
-            },
-            {
-                path: "/centers",
-                element: <CenterList />,
-                handle: {
-                    title: "Danh sách trung tâm",
-                },
-            },
-            {
-                path: "/centers/createcenter",
-                element: <CenterCreate />,
-                handle: {
-                    title: "Thêm trung tâm",
-                },
-            }
         ],
 
     },
