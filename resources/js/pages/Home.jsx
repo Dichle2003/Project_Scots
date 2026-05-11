@@ -9,7 +9,7 @@ import {
     RiSparklingLine,
 } from "react-icons/ri";
 import {useAddChat} from "@/hooks/chats/useChats.js";
-
+import { useNavigate } from "react-router-dom";
 const raw = localStorage.getItem("user");
 const user = raw ? JSON.parse(raw) : null;
 const name = user?.name ?? "bạn";
@@ -30,6 +30,7 @@ const MicrosoftLogo = () => (
     </span>);
 
 const ChatScots = () => {
+    const navigate = useNavigate();
     const [theme, setTheme] = useState("light");
     const [input, setInput] = useState("");
     const [messages, setMessages] = useState([]);
@@ -96,15 +97,20 @@ const ChatScots = () => {
         };
     }, [theme]);
     const addMutation = useAddChat();
-    const handleSend = () => {
+    const handleSend = async () => {
         const trimmed = input.trim();
         if (!trimmed) return;
+
         const payload = {
             id: null,
             message: trimmed
+        };
+        try {
+            const res = await addMutation.mutateAsync(payload);
+            navigate(`/c/${res.conversationId}`);
+        } catch (error) {
+            console.error(error);
         }
-        addMutation.mutate(payload)
-        // setInput("");
     };
     const handleKeyDown = (event) => {
         if (event.key === "Enter" && !event.shiftKey) {

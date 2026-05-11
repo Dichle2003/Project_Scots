@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import AppLayout from "./layouts/AppLayout";
-import ChatScots from "./pages/ChatScots";
+import ChatUI from "./pages/ChatUI.jsx";
 import Login from "./pages/auths/Login";
 import Home from "@/pages/Home";
 
@@ -65,7 +65,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/c/:id",
-                element: <ChatScots />,
+                element: <ChatUI />,
                 handle: {
                     title: "Chat Scots",
                 },

@@ -14,8 +14,8 @@ function SignInForm() {
 
     const [showPassword, setShowPassword] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("thoanv@scotsenglish.com");
+    const [password, setPassword] = useState("Scots@9999");
     const [error, setError] = useState(false);
     const [errors, setErrors] = useState({
         email: "",

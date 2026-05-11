@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
@@ -23,5 +24,6 @@ class AppServiceProvider extends ServiceProvider
         app('events')->listen(SocialiteWasCalled::class, function (SocialiteWasCalled $event) {
             $event->extendSocialite('microsoft', \SocialiteProviders\Microsoft\Provider::class);
         });
+        Schema::defaultStringLength(191);
     }
 }

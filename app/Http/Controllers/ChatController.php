@@ -31,7 +31,11 @@ class ChatController extends Controller
                 'user_id' => $userId,
                 'title' => substr($message, 0, 50)
             ]);
-            $conversationId = $conversation->id;
+            return response()->json([
+                'success' => true,
+                'message' => 'Success',
+                'conversationId' => $conversation->id,
+            ]);
         }
         Message::create([
             'conversation_id' => $conversationId,

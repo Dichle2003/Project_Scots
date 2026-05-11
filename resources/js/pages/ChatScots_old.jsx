@@ -109,54 +109,51 @@ const ChatScots = () => {
         }
     };
     return (
-        <div
-            className={`-m-5 h-[calc(90vh+2rem)] overflow-hidden transition-colors duration-300 md:-m-5 md:h-[calc(88vh+3rem)] ${palette.page}`}>
-            <div className="flex h-full overflow-hidden">
-                <main className="flex h-full  flex-1 flex-col overflow-hidden">
-                    <div className="flex min-h-0 flex-1 flex-col px-4 pb-6 sm:px-6 lg:px-8">
-                        <div className="mx-auto flex h-full w-full max-w-[1280px] flex-col gap-4 overflow-hidden">
-                            <div className=" my-auto py-4 sm:px-6 sm:py-5">
-                                <div>
-                                    <h2 className="text-2xl">Xin chào {name}!</h2>
-                                    <p>Chúng ta nên bắt đầu từ đâu nhỉ?</p>
-                                </div>
-                                <div>
+        <div className={`-m-5 min-h-screen ${palette.page}`}>
+            <div className="flex min-h-screen">
+                <main className="flex flex-1 flex-col">
 
-                                </div>
-                                <div className={`rounded-[28px] border p-3 sm:p-4 ${palette.input}`}>
-                                      <textarea
-                                          value={input}
-                                          onChange={(event) => setInput(event.target.value)}
-                                          onKeyDown={handleKeyDown}
-                                          rows={2}
-                                          placeholder="Nhập nội dung và nhấn Enter để gửi..."
-                                          className="w-full resize-none bg-transparent text-sm outline-none"
-                                      />
+                    <div className="flex flex-col px-4 pb-6 sm:px-6 lg:px-8">
+                        <div className="mx-auto w-full">
 
-                                    <div className="mt-3 flex items-center justify-between gap-3">
-                                        <div className="flex items-center gap-2">
-                                            <button
-                                                type="button"
-                                                className={`flex h-10 w-10 items-center justify-center rounded-full border ${palette.soft} hover:bg-gray-100 transition`}
-                                            >
-                                                <RiAddLine className="h-5 w-5" />
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className={`flex h-10 w-10 items-center justify-center rounded-full border ${palette.soft} hover:bg-gray-100 transition`}
-                                            >
-                                                <RiMicLine className="h-4 w-4" />
-                                            </button>
-                                        </div>
+                            {/* 🔹 Chat */}
+                            <div className="p-4 space-y-3">
+                                {/* 👇 thêm padding bottom */}
 
-                                        <div className="text-[10px] uppercase tracking-wider text-gray-400 font-medium">
-                                            Enter to send
-                                        </div>
+                                <div className="p-3 bg-gray-100 rounded w-fit">Tin nhắn 1</div>
+                                <div className="p-3 bg-blue-500 text-white rounded ml-auto w-fit">Tin nhắn 2</div>
+
+                                {Array.from({ length: 60 }).map((_, i) => (
+                                    <div
+                                        key={i}
+                                        className={`p-3 rounded w-fit ${
+                                            i % 2 === 0
+                                                ? "bg-gray-100"
+                                                : "ml-auto bg-blue-500 text-white"
+                                        }`}
+                                    >
+                                        Tin nhắn {i + 3}
                                     </div>
+                                ))}
+                            </div>
+
+                            {/* 🔹 Input */}
+                            <div className="sticky bottom-0 bg-white pt-3">
+                                <div className={`rounded-[28px] border p-3 sm:p-4 ${palette.input}`}>
+                            <textarea
+                                value={input}
+                                onChange={(event) => setInput(event.target.value)}
+                                onKeyDown={handleKeyDown}
+                                rows={2}
+                                placeholder="Nhập nội dung..."
+                                className="w-full resize-none bg-transparent text-sm outline-none"
+                            />
                                 </div>
                             </div>
+
                         </div>
                     </div>
+
                 </main>
             </div>
         </div>
