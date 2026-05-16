@@ -18,6 +18,20 @@ class ChatController extends Controller
             'chats' => ChatController::class
         ]);
     }
+    public function show($id)
+    {
+        $messages = Message::where('conversation_id', $id)
+            ->orderBy('created_at')
+            ->get(['id', 'role', 'content', 'created_at']);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'messages' => $messages,
+            ],
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -57,13 +71,39 @@ class ChatController extends Controller
                 'content' => $msg->content
             ];
         }
-        $response = Http::post('https://ai.hanhdv.info/webhook-test/54177038-b9cf-413e-8602-b16a9872b9bc', [
-            'sessionId' => $conversationId,
-            'messages' => $payload
+    //        $response = Http::post('https://ai.hanhdv.info/webhook-test/54177038-b9cf-413e-8602-b16a9872b9bc', [
+    //         'sessionId' => $conversationId,
+    //         'messages' => $payload
+    //     ]);
+    //     dd($response->body());
+    //     $reply = $response['reply'];
+    //     dd($reply);
+    // }
+        $reply = $this->renderMockReply($message);
+
+        Message::create([
+            'conversation_id' => $conversationId,
+            'role' => 'assistant',
+            'content' => $reply
         ]);
-        dd($response->body());
-        $reply = $response['reply'];
-        dd($reply);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Success',
+            'conversationId' => $conversationId,
+            'reply' => $reply,
+        ]);
+    }
+
+    private function renderMockReply($message)
+    {
+        $message = trim((string) $message);
+
+        if ($message === '') {
+            return 'Chào đại ca 👋';
+        }
+
+        return 'Chào đại ca 👋 Tôi đã nhận được tin nhắn: ' . $message;
     }
 
 }
