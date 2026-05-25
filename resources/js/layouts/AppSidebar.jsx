@@ -1,16 +1,24 @@
 import {useCallback, useEffect, useRef, useState} from "react";
-import {Link, useLocation} from "react-router";
+import {Link, useLocation, useNavigate} from "react-router";
 import {TbMessageChatbot} from "react-icons/tb";
-import {useSelector} from "react-redux";
+import {RiAddLine, RiDeleteBin6Line, RiEdit2Line, RiLogoutBoxRLine, RiMessage3Line, RiMore2Fill} from "react-icons/ri";
+import {useDispatch, useSelector} from "react-redux";
+import {logout} from "@/store/modules/storeAuth.js";
+import {useChats, useDeleteChat, useUpdateChat} from "@/hooks/chats/useChats.js";
 
 import {ChevronDownIcon} from "../icons";
 import {useSidebar} from "../context/SidebarContext";
 
 const navItems = [
     {
+        name: "Đoạn chat mới",
+        icon: <RiAddLine className="text-[22px]"/>,
+        path: "/",
+    },
+    {
         name: "Scots AI",
         icon: <TbMessageChatbot className="text-[22px]"/>,
-        path: "/chat-scots",
+        path: "/",
     },
 ];
 
@@ -24,12 +32,23 @@ const AppSidebar = () => {
         toggleMobileSidebar,
     } = useSidebar();
     const location = useLocation();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const user = useSelector((state) => state.user?.user);
     const isCollapsed = !isExpanded && !isMobileOpen;
+    const { data: conversationsRes } = useChats();
+    const conversations = conversationsRes?.data ?? [];
+    const updateChatMutation = useUpdateChat();
+    const deleteChatMutation = useDeleteChat();
 
     const [openSubmenu, setOpenSubmenu] = useState(null);
     const [subMenuHeight, setSubMenuHeight] = useState({});
+    const [menuOpenId, setMenuOpenId] = useState(null);
+    const [editingId, setEditingId] = useState(null);
+    const [editingTitle, setEditingTitle] = useState("");
+    const [accountMenuOpen, setAccountMenuOpen] = useState(false);
     const subMenuRefs = useRef({});
+    const accountMenuRef = useRef(null);
 
     const isActive = useCallback(
         (path) => location.pathname === path,
@@ -76,6 +95,17 @@ const AppSidebar = () => {
         }
     }, [openSubmenu]);
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (!accountMenuRef.current?.contains(event.target)) {
+                setAccountMenuOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
     const handleSubmenuToggle = (index, menuType) => {
         setOpenSubmenu((prevOpenSubmenu) => {
             if (
@@ -95,6 +125,49 @@ const AppSidebar = () => {
         } else {
             toggleMobileSidebar();
         }
+    };
+
+    const startEditing = (conversation) => {
+        setEditingId(conversation.id);
+        setEditingTitle(conversation.title || "");
+        setMenuOpenId(null);
+    };
+
+    const submitRename = async (conversationId) => {
+        const title = editingTitle.trim();
+        if (!title) return;
+
+        try {
+            await updateChatMutation.mutateAsync({
+                id: conversationId,
+                data: { title },
+            });
+            setEditingId(null);
+            setEditingTitle("");
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleDeleteConversation = async (conversationId) => {
+        const confirmed = window.confirm("Đại ca có chắc muốn xoá cuộc trò chuyện này không?");
+        if (!confirmed) return;
+
+        try {
+            await deleteChatMutation.mutateAsync(conversationId);
+            setMenuOpenId(null);
+
+            if (location.pathname === `/c/${conversationId}`) {
+                navigate("/");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleLogout = () => {
+        dispatch(logout());
+        navigate("/login");
     };
 
     const collapsedItemClass = "mx-auto flex h-11 w-11 items-center justify-center rounded-2xl px-0";
@@ -331,58 +404,178 @@ const AppSidebar = () => {
                             </div>
 
                             {renderMenuItems(navItems, "main")}
+
+                            {(isExpanded || isMobileOpen) && (
+                                <div className="mt-6">
+                                    <div className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                                        Lịch sử chat
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        {conversations.length > 0 ? (
+                                            conversations.map((conversation) => {
+                                                const active = location.pathname === `/c/${conversation.id}`;
+                                                const isEditing = editingId === conversation.id;
+                                                const isMenuOpen = menuOpenId === conversation.id;
+
+                                                return (
+                                                    <div
+                                                        key={conversation.id}
+                                                        className={`group relative rounded-xl transition ${
+                                                            active
+                                                                ? "bg-gray-100 dark:bg-gray-800"
+                                                                : "hover:bg-gray-50 dark:hover:bg-gray-800"
+                                                        }`}
+                                                    >
+                                                        {isEditing ? (
+                                                            <div className="flex items-center gap-2 px-3 py-2">
+                                                                <RiMessage3Line className="shrink-0 text-base text-gray-500" />
+                                                                <input
+                                                                    autoFocus
+                                                                    value={editingTitle}
+                                                                    onChange={(e) => setEditingTitle(e.target.value)}
+                                                                    onKeyDown={(e) => {
+                                                                        if (e.key === "Enter") {
+                                                                            e.preventDefault();
+                                                                            submitRename(conversation.id);
+                                                                        }
+                                                                        if (e.key === "Escape") {
+                                                                            setEditingId(null);
+                                                                            setEditingTitle("");
+                                                                        }
+                                                                    }}
+                                                                    onBlur={() => submitRename(conversation.id)}
+                                                                    className="w-full rounded-md border border-gray-200 bg-white px-2 py-1 text-sm outline-none focus:border-blue-400"
+                                                                />
+                                                            </div>
+                                                        ) : (
+                                                            <div className="flex items-center gap-2 px-2 py-1">
+                                                                <Link
+                                                                    to={`/c/${conversation.id}`}
+                                                                    className={`flex min-w-0 flex-1 items-center gap-3 rounded-xl px-1 py-1.5 text-sm transition ${
+                                                                        active
+                                                                            ? "text-gray-900 dark:text-white"
+                                                                            : "text-gray-600 dark:text-gray-300"
+                                                                    }`}
+                                                                    title={conversation.title}
+                                                                >
+                                                                    <RiMessage3Line className="shrink-0 text-base" />
+                                                                    <span className="truncate">{conversation.title}</span>
+                                                                </Link>
+
+                                                                <div className="relative">
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => setMenuOpenId(isMenuOpen ? null : conversation.id)}
+                                                                        className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 transition hover:bg-white hover:text-gray-600 group-hover:opacity-100 dark:hover:bg-gray-700"
+                                                                    >
+                                                                        <RiMore2Fill className="text-lg" />
+                                                                    </button>
+
+                                                                    {isMenuOpen && (
+                                                                        <div className="absolute right-0 top-9 z-20 w-36 rounded-xl border border-gray-200 bg-white p-1 shadow-lg">
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() => startEditing(conversation)}
+                                                                                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-gray-700 transition hover:bg-gray-100"
+                                                                            >
+                                                                                <RiEdit2Line className="text-base" />
+                                                                                Đổi tên
+                                                                            </button>
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() => handleDeleteConversation(conversation.id)}
+                                                                                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-red-600 transition hover:bg-red-50"
+                                                                            >
+                                                                                <RiDeleteBin6Line className="text-base" />
+                                                                                Xoá chat
+                                                                            </button>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })
+                                        ) : (
+                                            <div className="px-3 py-2 text-sm text-gray-400">
+                                                Chưa có cuộc hội thoại nào
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </nav>
 
                 <div className={`mt-auto border-t border-gray-200 pt-3 dark:border-gray-800 ${isCollapsed ? "pb-3" : "pb-4"}`}>
-                    <button
-                        type="button"
-                        title={isCollapsed ? user?.name || "Tài khoản" : undefined}
-                        className={`w-full rounded-2xl border border-gray-200 bg-white text-left transition hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-800 ${
-                            isCollapsed
-                                ? "mx-auto flex h-11 w-11 items-center justify-center p-0"
-                                : "flex items-center gap-3 px-3 py-3"
-                        }`}
-                    >
-                        <span className={`overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800 ${isCollapsed ? "h-9 w-9" : "h-10 w-10"}`}>
-                            <img
-                                src="/images/user/owner.jpg"
-                                alt="User"
-                                className="h-full w-full object-cover"
-                            />
-                        </span>
+                    <div ref={accountMenuRef} className="relative">
+                        <button
+                            type="button"
+                            onClick={() => setAccountMenuOpen((prev) => !prev)}
+                            title={isCollapsed ? user?.name || "Tài khoản" : undefined}
+                            className={`w-full rounded-2xl border border-gray-200 bg-white text-left transition hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:hover:bg-gray-800 ${
+                                isCollapsed
+                                    ? "mx-auto flex h-11 w-11 items-center justify-center p-0"
+                                    : "flex items-center gap-3 px-3 py-3"
+                            }`}
+                        >
+                            <span className={`overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800 ${isCollapsed ? "h-9 w-9" : "h-10 w-10"}`}>
+                                <img
+                                    src="/images/user/owner.jpg"
+                                    alt="User"
+                                    className="h-full w-full object-cover"
+                                />
+                            </span>
 
-                        {!isCollapsed && (
-                            <>
-                                <span className="min-w-0 flex-1">
-                                    <span className="block truncate text-sm font-semibold text-gray-800 dark:text-white/90">
-                                        {user?.name || "Guest"}
+                            {!isCollapsed && (
+                                <>
+                                    <span className="min-w-0 flex-1">
+                                        <span className="block truncate text-sm font-semibold text-gray-800 dark:text-white/90">
+                                            {user?.name || "Guest"}
+                                        </span>
+                                        <span className="block truncate text-xs text-gray-500 dark:text-gray-400">
+                                            {user?.email || "Tài khoản người dùng"}
+                                        </span>
                                     </span>
-                                    <span className="block truncate text-xs text-gray-500 dark:text-gray-400">
-                                        {user?.email || "Tài khoản người dùng"}
-                                    </span>
-                                </span>
 
-                                <svg
-                                    width="18"
-                                    height="18"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="shrink-0 text-gray-400"
+                                    <svg
+                                        width="18"
+                                        height="18"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className={`shrink-0 text-gray-400 transition ${accountMenuOpen ? "rotate-90" : ""}`}
+                                    >
+                                        <path
+                                            d="M9 6L15 12L9 18"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                </>
+                            )}
+                        </button>
+
+                        {accountMenuOpen && (
+                            <div className={`absolute z-30 overflow-hidden rounded-2xl border border-gray-200 bg-white p-1 shadow-xl ${
+                                isCollapsed ? "bottom-0 left-14 w-48" : "bottom-full left-0 mb-2 w-full"
+                            }`}>
+                                <button
+                                    type="button"
+                                    onClick={handleLogout}
+                                    className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-medium text-red-600 transition hover:bg-red-50"
                                 >
-                                    <path
-                                        d="M9 6L15 12L9 18"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    />
-                                </svg>
-                            </>
+                                    <RiLogoutBoxRLine className="text-base" />
+                                    Đăng xuất
+                                </button>
+                            </div>
                         )}
-                    </button>
+                    </div>
                 </div>
             </div>
         </aside>

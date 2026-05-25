@@ -25,7 +25,7 @@ const LayoutContent = () => {
             {/* 🔥 GLOBAL LOADING */}
             <FullScreenLoading visible={isLoading}/>
 
-            <div className={`h-screen overflow-hidden xl:flex ${isChatPage ? "bg-gray-50" : ""}`}>
+            <div className={`h-screen overflow-hidden xl:flex ${isChatPage ? "bg-white" : ""}`}>
                 <div>
                     <AppSidebar/>
                     <Backdrop/>
@@ -39,7 +39,7 @@ const LayoutContent = () => {
                     {/*<AppHeader/>*/}
 
                     <div className={isChatPage
-                        ? "flex min-h-0 flex-1 flex-col overflow-hidden"
+                        ? "flex min-h-0 flex-1 flex-col overflow-hidden bg-white"
                         : "mx-auto w-full max-w-(--breakpoint-lg) p-4 md:p-6"
                     }>
                         <Outlet/>
